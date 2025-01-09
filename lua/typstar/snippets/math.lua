@@ -20,6 +20,8 @@ return {
 
     -- boolean logic
     snip('no', 'not ', {}, math),
+    snip('ip', '==> ', {}, math),
+    snip('ib', '<== ', {}, math),
 
     -- relations
     snip('el', '= ', {}, math),
