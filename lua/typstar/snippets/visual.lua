@@ -15,7 +15,7 @@ local operations = {                            -- first boolean: existing brack
     { 'vi',  '1/',         '',  true,  false },
     { 'bb',  '(',          ')', true,  false }, -- add round brackets
     { 'sq',  '[',          ']', true,  false }, -- add square brackets
-    { 'ts',  '{',          '}', true,  false }, -- add curly brackets 
+    { 'st',  '{',          '}', true,  false }, -- add curly brackets 
     { 'bB',  '(',          ')', false, false }, -- replace with round brackets
     { 'sQ',  '[',          ']', false, false }, -- replace with square brackets
     { 'BB',  '',           '',  false, false }, -- remove brackets

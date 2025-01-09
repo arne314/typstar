@@ -43,7 +43,7 @@ return {
     snip('bxx', 'times.square ', {}, math),
 
     -- sets
-    snip('st', '{<>}', { i(1) }, math),
+    -- 'st' to '{<>} in ./visual.lua
     snip('set', '{<>|<>}', { i(1), i(2) }, math),
     snip('es', 'emptyset ', {}, math),
     snip('ses', '{emptyset} ', {}, math),
