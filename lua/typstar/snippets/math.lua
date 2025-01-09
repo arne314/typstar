@@ -70,8 +70,8 @@ return {
     snip('ddx', '(d <>)(d <>)', { i(1, 'f'), i(2, 'x') }, math),
     snip('it', 'integral', {}, math),
     snip('int', 'integral_(<>)^(<>)', { i(1, 'a'), i(2, 'b') }, math),
-    snip('oit', 'integral_(Omega}', {}, math),
-    snip('dit', 'integral_{<>}', { i(1, 'Omega') }, math),
+    snip('oit', 'integral_Omega', {}, math),
+    snip('dit', 'integral_(<>)', { i(1, 'Omega') }, math),
     snip('sm', 'sum_(<>)^(<>)', { i(1, 'i=0'), i(2, 'oo') }, math),
 
     snip('lm', 'lim <>', { i(1, 'a_n') }, math),
