@@ -72,7 +72,8 @@ return {
     snip('oit', 'integral_(Omega}', {}, math),
     snip('dit', 'integral_{<>}', { i(1, 'Omega') }, math),
 
-    snip('sm', 'sum_(<>)^(<>)', { i(1, 'i=0'), i(2, 'oo') }, math),
+    snip('sm', 'sum', {}, math),
+    snip('sum', 'sum_(<>)^(<>)', { i(1, 'i=0'), i(2, 'oo') }, math),
     snip('osm', 'sum_Omega', {}, math),
     snip('dsm', 'sum_(<>)', { i(1, 'I') }, math),
 
