@@ -20,6 +20,8 @@ return {
 
     -- boolean logic
     snip('no', 'not ', {}, math),
+    snip('ip', '==>> ', {}, math),
+    snip('ib', '<<== ', {}, math),
 
     -- relations
     snip('el', '= ', {}, math),
@@ -41,7 +43,8 @@ return {
     snip('bxx', 'times.square ', {}, math),
 
     -- sets
-    snip('set', '{<>}', { i(1) }, math),
+    -- 'st' to '{<>} in ./visual.lua
+    snip('set', '{<>|<>}', { i(1), i(2) }, math),
     snip('es', 'emptyset ', {}, math),
     snip('ses', '{emptyset} ', {}, math),
     snip('sp', 'supset ', {}, math),
@@ -72,7 +75,11 @@ return {
     snip('int', 'integral_(<>)^(<>)', { i(1, 'a'), i(2, 'b') }, math),
     snip('oit', 'integral_Omega', {}, math),
     snip('dit', 'integral_(<>)', { i(1, 'Omega') }, math),
-    snip('sm', 'sum_(<>)^(<>)', { i(1, 'i=0'), i(2, 'oo') }, math),
+
+    snip('sm', 'sum ', {}, math),
+    snip('sum', 'sum_(<>)^(<>)', { i(1, 'i=0'), i(2, 'oo') }, math),
+    snip('osm', 'sum_Omega', {}, math),
+    snip('dsm', 'sum_(<>)', { i(1, 'I') }, math),
 
     snip('lm', 'lim <>', { i(1, 'a_n') }, math),
     snip('lim', 'lim_(<> ->> <>) <>', { i(1, 'n'), i(2, 'oo'), i(3, 'a_n') }, math),
