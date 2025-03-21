@@ -32,7 +32,7 @@ function M.cap(i)
     return luasnip.function_node(function(_, snip) return snip.captures[i] end)
 end
 
-function M.get_white_spaces(i)
+function M.leading_white_spaces(i)
     -- isolate whitespaces of captured group
     return luasnip.function_node(function(_, snip)
         local capture = snip.captures[i] or '' -- Return capture or empty string if nil
@@ -82,11 +82,12 @@ end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority)
     return M.snip(
-        '([^%s].*?)' .. trigger,
+        '([^\\s]\\s+)' .. trigger,
         '<>\n<>' .. expand,
-        { M.cap(1), M.get_white_spaces(1), unpack(insert) },
+        { M.cap(1), M.leading_white_spaces(1), unpack(insert) },
         condition,
-        priority
+        priority,
+        false
     )
 end
 
