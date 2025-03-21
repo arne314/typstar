@@ -32,6 +32,16 @@ function M.cap(i)
     return luasnip.function_node(function(_, snip) return snip.captures[i] end)
 end
 
+function M.get_white_spaces(i)
+    -- isolate whitespaces of captured group
+    return luasnip.function_node(function(_, snip)
+        local capture = snip.captures[i] or '' -- Return capture or empty string if nil
+        -- Extract only leading whitespace using pattern matching
+        local whitespace = capture:match('^%s*') or ''
+        return whitespace
+    end)
+end
+
 function M.visual(idx, default)
     default = default or ''
     return luasnip.dynamic_node(idx, function(args, parent)
@@ -68,6 +78,14 @@ end
 
 function M.start_snip(trigger, expand, insert, condition, priority)
     return M.snip('^(\\s*)' .. trigger, '<>' .. expand, { M.cap(1), unpack(insert) }, condition, priority)
+end
+
+function M.start_snip_in_newl(trigger, expand, insert, condition, priority)
+    return M.snip('([^%s].*?)' .. trigger,
+        '<>\n<>' .. expand,
+        { M.cap(1), M.get_white_spaces(1), unpack(insert) },
+        condition,
+        priority)
 end
 
 local alts_regex = '[\\[\\(](.*|.*)[\\)\\]]'
