@@ -43,7 +43,12 @@ end
 
 return {
     start('dm', '$\n<>\t<>\n<>$', { cap(1), visual(1), cap(1) }, markup),
-    helper.start_snip_in_newl(' dm', '$\n<>\t<>\n<>$', { helper.get_white_spaces(1),visual(1),helper.get_white_spaces(1) }, markup),
+    helper.start_snip_in_newl(
+        ' dm',
+        '$\n<>\t<>\n<>$',
+        { helper.get_white_spaces(1), visual(1), helper.get_white_spaces(1) },
+        markup
+    ),
     start('fla', '#flashcard(0)[<>][\n<>\t<>\n<>]', { i(1, 'flashcard'), cap(1), visual(2), cap(1) }, markup),
     start('flA', '#flashcard(0, "<>")[\n<>\t<>\n<>]', { i(1, 'flashcard'), cap(1), visual(2), cap(1) }, markup),
     snip('IMP', '$==>>$ ', {}, markup),

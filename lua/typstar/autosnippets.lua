@@ -81,11 +81,13 @@ function M.start_snip(trigger, expand, insert, condition, priority)
 end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority)
-    return M.snip('([^%s].*?)' .. trigger,
+    return M.snip(
+        '([^%s].*?)' .. trigger,
         '<>\n<>' .. expand,
         { M.cap(1), M.get_white_spaces(1), unpack(insert) },
         condition,
-        priority)
+        priority
+    )
 end
 
 local alts_regex = '[\\[\\(](.*|.*)[\\)\\]]'
