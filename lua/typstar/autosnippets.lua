@@ -96,6 +96,50 @@ function M.start_snip(trigger, expand, insert, condition, priority, trigOptions)
 end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority, trigOptions)
+    local last_newl_index = 0
+    local modified_expand = expand
+    function shallowClone(original)
+        local copy = {}
+        for key, value in pairs(original) do
+            copy[key] = value
+        end
+        return copy
+    end
+
+    local modified_insert = shallowClone(insert)
+
+    local newl_count = 0
+    local offset = 0 -- Track offset as we add characters
+
+    while true do
+        local new_newl_index = string.find(expand, "\n", last_newl_index + 1)
+        if not new_newl_index then
+            vim.notify("No more newlines found after position " .. last_newl_index)
+            break
+        end
+
+        vim.notify("Found newline at index: " .. new_newl_index)
+        newl_count = newl_count + 1
+
+        -- Insert <> after the newline in the modified string
+        local insert_pos = new_newl_index + offset + 1 -- +1 to position after \n
+        modified_expand = string.sub(modified_expand, 1, insert_pos - 1) ..
+            "<>" ..
+            string.sub(modified_expand, insert_pos)
+
+        offset = offset + 2
+
+        local substring = string.sub(modified_expand, 1, insert_pos + 1) -- +1 to include the newly added <>
+        local count = 0
+
+        local _, occurrences = string.gsub(substring, "<>", "")
+        count = occurrences
+        table.insert(modified_insert, count, M.leading_white_spaces(1))
+
+        last_newl_index = new_newl_index
+    end
+    insert = modified_insert
+    expand = modified_expand 
     return M.snip(
         '([^\\s]\\s+)' .. trigger,
         '<>\n<>' .. expand,
@@ -180,7 +224,7 @@ function M.engine(trigger, opts)
 
         -- blacklist
         for _, w in ipairs(opts.blacklist) do
-            if line_full:sub(-#w) == w then return nil end
+            if line_full:sub(- #w) == w then return nil end
         end
         return whole, captures
     end
