@@ -114,11 +114,11 @@ function M.start_snip_in_newl(trigger, expand, insert, condition, priority, trig
     while true do
         local new_newl_index = string.find(expand, "\n", last_newl_index + 1)
         if not new_newl_index then
-            vim.notify("No more newlines found after position " .. last_newl_index)
+            -- vim.notify("No more newlines found after position " .. last_newl_index)
             break
         end
 
-        vim.notify("Found newline at index: " .. new_newl_index)
+        -- vim.notify("Found newline at index: " .. new_newl_index)
         newl_count = newl_count + 1
 
         -- Insert <> after the newline in the modified string
