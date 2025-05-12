@@ -100,7 +100,7 @@ end
 -- For example prepend = '-- ' in lua.
 -- indent: boolean to turn off indenting (option can't be set off right now)
 -- prepend: prepend string
-function M.prepend_to_expand_lines(expand, insert, prepend, indent)
+function M.blocktransform(expand, insert, prepend, indent)
     -- if idiomatic, skip
     if indent ~= nil and not indent and not prepend then
         return expand, insert
@@ -123,12 +123,13 @@ function M.prepend_to_expand_lines(expand, insert, prepend, indent)
     local newl_count = 0
     local offset = 0
 
-    --  first line is not marked by \n
-    modified_expand = (indent and "<>" or "") .. prepend .. modified_expand
-    if indent then
-        table.insert(modified_insert, 1, M.leading_white_spaces(1))
-    end
-    offset = offset + (indent and 2 or 0) + #prepend
+    -- not necessary anymore since change
+    -- --  first line is not marked by \n
+    -- modified_expand = (indent and "<>" or "") .. prepend .. modified_expand
+    -- if indent then
+    --     table.insert(modified_insert, 1, M.leading_white_spaces(1))
+    -- end
+    -- offset = offset + (indent and 2 or 0) + #prepend
 
     -- logic
     while true do
@@ -161,17 +162,41 @@ function M.prepend_to_expand_lines(expand, insert, prepend, indent)
     return modified_expand, modified_insert
 end
 
-function M.start_snip_in_newl(trigger, expand, insert, condition, priority, prepend, prependlines, trigOptions)
-    local expand, insert = M.prepend_to_expand_lines(expand, insert, prependlines)
-    prepend = prepend or ''
+function M.snip_after_transform(trigger, expand, insert, condition, priority, prependlines, trigOptions)
+    local expand, insert = M.blocktransform(expand, insert, prependlines, true)
     return M.snip(
         trigger,
-        '<><>\n' .. expand,
-        { M.cap(1), prepend, unpack(insert) },
+        expand,
+        insert,
         condition,
         priority,
         vim.tbl_deep_extend('keep', { wordTrig = false }, trigOptions or {})
     )
+end
+
+-- Using sniptransform
+-- function M.start_snip(trigger, expand, insert, condition, priority, trigOptions)
+--     return M.snip_after_transform('^(\\s*)' .. trigger, "<>"..expand, { M.cap(1),unpack(insert) },
+--         condition, priority,
+--         prependlines,
+--         trigOptions)
+-- end
+
+function M.start_snip_in_newl(trigger, expand, insert, condition, priority, prepend, prependlines, trigOptions)
+    prepend = prepend or ''
+    return M.snip_after_transform("([^\\s]\\s+)" .. trigger, '<><>\n' .. expand, { M.cap(1), prepend, unpack(insert) },
+        condition, priority,
+        prependlines,
+        trigOptions)
+end
+
+function M.bulletpoint_snip(trigger, expand, insert, condition, priority, prepend, prependlines, trigOptions)
+    prepend = prepend or ''
+    return M.snip_after_transform("(^\\s*\\-\\s+.*\\s*)" .. trigger, '<><>' .. expand,
+        { M.cap(1), prepend, unpack(insert) },
+        condition, priority,
+        prependlines,
+        trigOptions)
 end
 
 local alts_regex = '[\\[\\(](.*|.*)[\\)\\]]'
