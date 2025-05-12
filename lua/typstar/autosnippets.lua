@@ -101,9 +101,12 @@ end
 -- indent: boolean to turn off indenting (option can't be set off right now)
 -- prepend: prepend string
 function M.prepend_to_expand_lines(expand, insert, prepend, indent)
+    -- if idiomatic, skip
     if indent ~= nil and not indent and not prepend then
         return expand, insert
     end
+
+    -- defaults / setup
     if indent == nil then indent = true end
     prepend = prepend or ''
     local last_newl_index = 0
@@ -115,33 +118,34 @@ function M.prepend_to_expand_lines(expand, insert, prepend, indent)
         end
         return copy
     end
-
     local modified_insert = shallowClone(insert)
-
     local newl_count = 0
     local offset = 0
 
-    modified_expand = (indent and "<>" or "")..prepend .. modified_expand
+    --  first line is not marked by \n
+    modified_expand = (indent and "<>" or "") .. prepend .. modified_expand
     if indent then
         table.insert(modified_insert, 1, M.leading_white_spaces(1))
     end
     offset = offset + (indent and 2 or 0) + #prepend
 
+    -- logic
     while true do
+        -- break if no \n anymore
         local new_newl_index = string.find(expand, "\n", last_newl_index + 1)
         if not new_newl_index then
             break
         end
-
         newl_count = newl_count + 1
 
+        -- insert the prepend and newl at the correct position
         local insert_pos = new_newl_index + offset + 1
         modified_expand = string.sub(modified_expand, 1, insert_pos - 1) ..
             (indent and "<>" or "") .. prepend ..
             string.sub(modified_expand, insert_pos)
-
         offset = offset + (indent and 2 or 0) + #prepend
 
+        -- indent of course needs to be added as a dynamic function
         if indent then
             local substring = string.sub(modified_expand, 1, insert_pos + 1)
             local count = 0
