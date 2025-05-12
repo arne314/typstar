@@ -95,7 +95,17 @@ function M.start_snip(trigger, expand, insert, condition, priority, trigOptions)
     return M.snip('^(\\s*)' .. trigger, '<>' .. expand, { M.cap(1), unpack(insert) }, condition, priority, trigOptions)
 end
 
-function M.start_snip_in_newl(trigger, expand, insert, condition, priority, trigOptions)
+-- Allows to pass expand string and insert table to either indent each line
+-- dynamically of the captured group indent, and or prepend to each line after the indent
+-- For example prepend = '-- ' in lua.
+-- indent: boolean to turn off indenting (doesn't work)
+-- prepend: prepend string
+function M.prepend_to_expand_lines(expand, insert, indent, prepend)
+    if indent ~= nil and not indent and not prepend then
+        return expand, insert
+    end
+    if indent == nil then indent = true end
+    prepend = prepend or ''
     local last_newl_index = 0
     local modified_expand = expand
     function shallowClone(original)
@@ -109,41 +119,49 @@ function M.start_snip_in_newl(trigger, expand, insert, condition, priority, trig
     local modified_insert = shallowClone(insert)
 
     local newl_count = 0
-    local offset = 0 -- Track offset as we add characters
+    local offset = 0
+
+    modified_expand = (indent and "<>" or "")..prepend .. modified_expand
+    if indent then
+        table.insert(modified_insert, 1, M.leading_white_spaces(1))
+    end
+    offset = offset + (indent and 2 or 0) + #prepend
 
     while true do
         local new_newl_index = string.find(expand, "\n", last_newl_index + 1)
         if not new_newl_index then
-            -- vim.notify("No more newlines found after position " .. last_newl_index)
             break
         end
 
-        -- vim.notify("Found newline at index: " .. new_newl_index)
         newl_count = newl_count + 1
 
-        -- Insert <> after the newline in the modified string
-        local insert_pos = new_newl_index + offset + 1 -- +1 to position after \n
+        local insert_pos = new_newl_index + offset + 1
         modified_expand = string.sub(modified_expand, 1, insert_pos - 1) ..
-            "<>" ..
+            (indent and "<>" or "") .. prepend ..
             string.sub(modified_expand, insert_pos)
 
-        offset = offset + 2
+        offset = offset + (indent and 2 or 0) + #prepend
 
-        local substring = string.sub(modified_expand, 1, insert_pos + 1) -- +1 to include the newly added <>
-        local count = 0
+        if indent then
+            local substring = string.sub(modified_expand, 1, insert_pos + 1)
+            local count = 0
 
-        local _, occurrences = string.gsub(substring, "<>", "")
-        count = occurrences
-        table.insert(modified_insert, count, M.leading_white_spaces(1))
+            local _, occurrences = string.gsub(substring, "<>", "")
+            count = occurrences
+            table.insert(modified_insert, count, M.leading_white_spaces(1))
+        end
 
         last_newl_index = new_newl_index
     end
-    insert = modified_insert
-    expand = modified_expand 
+    return modified_expand, modified_insert
+end
+
+function M.start_snip_in_newl(trigger, expand, insert, condition, priority, trigOptions)
+    local expand, insert = M.prepend_to_expand_lines(expand, insert)
     return M.snip(
         '([^\\s]\\s+)' .. trigger,
-        '<>\n<>' .. expand,
-        { M.cap(1), M.leading_white_spaces(1), unpack(insert) },
+        '<>\n' .. expand,
+        { M.cap(1), unpack(insert) },
         condition,
         priority,
         vim.tbl_deep_extend('keep', { wordTrig = false }, trigOptions or {})
