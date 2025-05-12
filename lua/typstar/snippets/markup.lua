@@ -45,7 +45,7 @@ end
 
 return {
     start('dm', '$\n<>\n<>$', { indent_visual(1), cap(1) }, markup),
-    -- helper.start_snip_in_newl('dm', '$\n\t<>\n$ <>', { helper.visual(1), i(2)  }, markup),
+    -- helper.start_snip_in_newl('dm', '$\n<>\n<>$', { indent_visual(1), helper.leading_white_spaces(1) }, markup),
     helper.start_snip_in_newl('dm', '$\n\t<>\n$ <>', { helper.visual(1), i(2)  }, markup, 999),
     helper.bulletpoint_snip("dm", '\n$\n\t<>\n$ <>', { helper.visual(1), i(2)  }, markup, 1001, '' ,"\t"),
     start('fla', '#flashcard(0)[<>][\n<>\n<>]', { i(1, 'flashcard'), indent_visual(2), cap(1) }, markup),
