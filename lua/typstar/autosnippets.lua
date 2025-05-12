@@ -118,6 +118,7 @@ function M.prepend_to_expand_lines(expand, insert, prepend, indent)
         end
         return copy
     end
+
     local modified_insert = shallowClone(insert)
     local newl_count = 0
     local offset = 0
@@ -160,12 +161,13 @@ function M.prepend_to_expand_lines(expand, insert, prepend, indent)
     return modified_expand, modified_insert
 end
 
-function M.start_snip_in_newl(trigger, expand, insert, condition, priority, trigOptions)
-    local expand, insert = M.prepend_to_expand_lines(expand, insert)
+function M.start_snip_in_newl(trigger, expand, insert, condition, priority, prepend, prependlines, trigOptions)
+    local expand, insert = M.prepend_to_expand_lines(expand, insert, prependlines)
+    prepend = prepend or ''
     return M.snip(
-        '([^\\s]\\s+)' .. trigger,
-        '<>\n' .. expand,
-        { M.cap(1), unpack(insert) },
+        trigger,
+        '<><>\n' .. expand,
+        { M.cap(1), prepend, unpack(insert) },
         condition,
         priority,
         vim.tbl_deep_extend('keep', { wordTrig = false }, trigOptions or {})
