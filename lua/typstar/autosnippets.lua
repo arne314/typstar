@@ -98,9 +98,9 @@ end
 -- Allows to pass expand string and insert table to either indent each line
 -- dynamically of the captured group indent, and or prepend to each line after the indent
 -- For example prepend = '-- ' in lua.
--- indent: boolean to turn off indenting (doesn't work)
+-- indent: boolean to turn off indenting (option can't be set off right now)
 -- prepend: prepend string
-function M.prepend_to_expand_lines(expand, insert, indent, prepend)
+function M.prepend_to_expand_lines(expand, insert, prepend, indent)
     if indent ~= nil and not indent and not prepend then
         return expand, insert
     end
