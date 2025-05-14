@@ -121,14 +121,6 @@ function M.blocktransform(expand, insert, prepend, indent)
     local newl_count = 0
     local offset = 0
 
-    -- not necessary anymore since change
-    -- --  first line is not marked by \n
-    -- modified_expand = (indent and "<>" or "") .. prepend .. modified_expand
-    -- if indent then
-    --     table.insert(modified_insert, 1, M.leading_white_spaces(1))
-    -- end
-    -- offset = offset + (indent and 2 or 0) + #prepend
-
     -- logic
     while true do
         -- break if no \n anymore
@@ -170,14 +162,6 @@ function M.snip_after_transform(trigger, expand, insert, condition, priority, pr
         vim.tbl_deep_extend('keep', { wordTrig = false }, trigOptions or {})
     )
 end
-
--- Using sniptransform
--- function M.start_snip(trigger, expand, insert, condition, priority, trigOptions)
---     return M.snip_after_transform('^(\\s*)' .. trigger, "<>"..expand, { M.cap(1),unpack(insert) },
---         condition, priority,
---         prependlines,
---         trigOptions)
--- end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority, prepend, prependlines, trigOptions)
     prepend = prepend or ''
