@@ -102,9 +102,7 @@ end
 -- prepend: prepend string
 function M.blocktransform(expand, insert, prepend, indent)
     -- if idiomatic, skip
-    if indent ~= nil and not indent and not prepend then
-        return expand, insert
-    end
+    if indent ~= nil and not indent and not prepend then return expand, insert end
 
     -- defaults / setup
     if indent == nil then indent = true end
@@ -134,17 +132,16 @@ function M.blocktransform(expand, insert, prepend, indent)
     -- logic
     while true do
         -- break if no \n anymore
-        local new_newl_index = string.find(expand, "\n", last_newl_index + 1)
-        if not new_newl_index then
-            break
-        end
+        local new_newl_index = string.find(expand, '\n', last_newl_index + 1)
+        if not new_newl_index then break end
         newl_count = newl_count + 1
 
         -- insert the prepend and newl at the correct position
         local insert_pos = new_newl_index + offset + 1
-        modified_expand = string.sub(modified_expand, 1, insert_pos - 1) ..
-            (indent and "<>" or "") .. prepend ..
-            string.sub(modified_expand, insert_pos)
+        modified_expand = string.sub(modified_expand, 1, insert_pos - 1)
+            .. (indent and '<>' or '')
+            .. prepend
+            .. string.sub(modified_expand, insert_pos)
         offset = offset + (indent and 2 or 0) + #prepend
 
         -- indent of course needs to be added as a dynamic function
@@ -152,7 +149,7 @@ function M.blocktransform(expand, insert, prepend, indent)
             local substring = string.sub(modified_expand, 1, insert_pos + 1)
             local count = 0
 
-            local _, occurrences = string.gsub(substring, "<>", "")
+            local _, occurrences = string.gsub(substring, '<>', '')
             count = occurrences
             table.insert(modified_insert, count, M.leading_white_spaces(1))
         end
@@ -184,19 +181,28 @@ end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority, prepend, prependlines, trigOptions)
     prepend = prepend or ''
-    return M.snip_after_transform("([^\\s]\\s+)" .. trigger, '<><>\n' .. expand, { M.cap(1), prepend, unpack(insert) },
-        condition, priority,
+    return M.snip_after_transform(
+        '([^\\s]\\s+)' .. trigger,
+        '<><>\n' .. expand,
+        { M.cap(1), prepend, unpack(insert) },
+        condition,
+        priority,
         prependlines,
-        trigOptions)
+        trigOptions
+    )
 end
 
 function M.bulletpoint_snip(trigger, expand, insert, condition, priority, prepend, prependlines, trigOptions)
     prepend = prepend or ''
-    return M.snip_after_transform("(^\\s*\\-\\s+.*\\s*)" .. trigger, '<><>' .. expand,
+    return M.snip_after_transform(
+        '(^\\s*\\-\\s+.*\\s*)' .. trigger,
+        '<><>' .. expand,
         { M.cap(1), prepend, unpack(insert) },
-        condition, priority,
+        condition,
+        priority,
         prependlines,
-        trigOptions)
+        trigOptions
+    )
 end
 
 local alts_regex = '[\\[\\(](.*|.*)[\\)\\]]'
@@ -273,7 +279,7 @@ function M.engine(trigger, opts)
 
         -- blacklist
         for _, w in ipairs(opts.blacklist) do
-            if line_full:sub(- #w) == w then return nil end
+            if line_full:sub(-#w) == w then return nil end
         end
         return whole, captures
     end
