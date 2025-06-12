@@ -23,7 +23,7 @@ M.in_math = function()
     return utils.cursor_within_treesitter_query(ts_math_query, 0, cursor)
         and not utils.cursor_within_treesitter_query(ts_string_query, 0, cursor)
 end
-M.in_markup = function() return utils.cursor_within_treesitter_query(ts_markup_query, 2) end
+M.in_markup = function() return utils.cursor_within_treesitter_query(ts_markup_query, 1) end
 M.not_in_math = function() return not M.in_math() end
 M.not_in_markup = function() return not M.in_markup() end
 M.snippets_toggle = true
