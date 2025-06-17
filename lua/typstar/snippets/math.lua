@@ -75,7 +75,7 @@ return {
     snip('cc', 'cases(\n\t<>\n)\\', { i(1, '1') }, math),
     snip('([A-Za-z])o([A-Za-z0-9])', '<>(<>) ', { cap(1), cap(2) }, math, 100, {
         maxTrigLength = 3,
-        blacklist = { 'bot', 'cos', 'col', 'com', 'con', 'dol', 'dot', 'log', 'loz', 'mod', 'top', 'won', 'xor' },
+        blacklist = { 'bot', 'cos', 'col', 'com', 'con', 'dol', 'dot', 'log', 'loz', 'mod', 'roo', 'top', 'won', 'xor' },
     }),
     snip('(K|M|N|Q|R|S|Z)([\\dn]) ', '<><>^<> ', { cap(1), cap(1), cap(2) }, math),
 
