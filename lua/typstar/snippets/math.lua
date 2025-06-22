@@ -81,8 +81,8 @@ return {
 
     snip('dx', 'dif / (dif <>) ', { i(1, 'x') }, math, 900),
     snip('ddx', '(dif <>) / (dif <>) ', { i(1, 'f'), i(2, 'x') }, math),
-    snip('DX', 'partial / (partial <>) ', { i(1, 'x') }, math, 900),
-    snip('DDX', '(partial <>) / (partial <>) ', { i(1, 'f'), i(2, 'x') }, math),
+    snip('DX', 'diff / (diff <>) ', { i(1, 'x') }, math, 900),
+    snip('DDX', '(diff <>) / (diff <>) ', { i(1, 'f'), i(2, 'x') }, math),
     snip('part', 'partial ', {}, math, 1600),
     snip('it', 'integral ', {}, math, 900),
     snip('int', 'integral_(<>)^(<>) ', { i(1, 'a'), i(2, 'b') }, math),
