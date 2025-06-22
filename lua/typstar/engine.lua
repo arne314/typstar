@@ -172,7 +172,7 @@ function M.setup()
             vim.api.nvim_create_autocmd('User', {
                 pattern = 'LuasnipPreExpand',
                 callback = function()
-                    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-g>u', true, false, true), 'n', false)
+                    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-g>u', true, false, true), 'i', false)
                 end,
             })
         end
