@@ -52,11 +52,12 @@
                   store_selection_keys = "<Tab>",
                 })
 
-                require('typstar').setup()
+                local typstar = require('typstar')
+                typstar.setup({})
 
                 vim.keymap.set({'n', 'i'}, '<M-t>', '<Cmd>TypstarToggleSnippets<CR>', { silent = true, noremap = true })
-                vim.keymap.set({'n', 'i'}, '<M-j>', function() ls.jump( 1) end, { silent = true, noremap = true })
-                vim.keymap.set({'n', 'i'}, '<M-k>', function() ls.jump(-1) end, { silent = true, noremap = true })
+                vim.keymap.set({'n', 'i'}, '<M-j>', '<Cmd>TypstarSmartJump<CR>', { silent = true, noremap = true })
+                vim.keymap.set({'n', 'i'}, '<M-k>', '<Cmd>TypstarSmartJumpBack<CR>', { silent = true, noremap = true })
                 EOF
               '';
               plugins = [

@@ -41,7 +41,7 @@ local greek_keys = {}
 local greek_letters_set = {}
 local common_indices = { '\\d+', '[i-n]' }
 -- buitins and caligraphic letters from github.com/lentilus/readable-typst
-local index_conflicts = { 'Im', 'in', 'ln', 'pi', 'xi', 'Ii', 'Jj', 'Kk', 'Ll', 'Mm', 'Nn' }
+local index_conflicts = { 'Im', 'in', 'ln', 'Pi', 'pi', 'Xi', 'xi', 'Ii', 'Jj', 'Kk', 'Ll', 'Mm', 'Nn' }
 local index_conflicts_set = {}
 local punctuation_prepend_space = { ',', ';' }
 local punctuation_prepend_space_set = {}

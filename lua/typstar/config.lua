@@ -27,6 +27,9 @@ local default_config = {
             'visual',
         },
         exclude = {}, -- list of triggers to exclude
+        visual_disable = {}, -- visual.lua: list of triggers to exclude from visual selection mode
+        visual_disable_normal = {}, -- visual.lua: list of triggers to exclude from normal snippet mode
+        visual_disable_postfix = {}, -- visual.lua: list of triggers to exclude from postfix snippet mode
     },
 }
 

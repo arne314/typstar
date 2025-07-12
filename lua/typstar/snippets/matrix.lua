@@ -47,6 +47,8 @@ local lmat = function(_, sp)
             for k = 1, cols + 1 do
                 if k == cols then
                     table.insert(nodes, t('dots.down, '))
+                elseif k == cols + 1 then
+                    table.insert(nodes, t('dots.v'))
                 else
                     table.insert(nodes, t('dots.v, '))
                 end

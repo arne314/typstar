@@ -10,6 +10,8 @@ Neovim plugin for efficient note taking in Typst
 
 ### Snippets
 Use `:TypstarToggleSnippets` to toggle all snippets at any time.
+To efficiently navigate insert nodes and avoid overlapping ones,
+use `:TypstarSmartJump` and `:TypstarSmartJumpBack`.
 Available snippets can mostly be intuitively derived from [here](././lua/typstar/snippets), they include:
 
 Markup snippets:
@@ -86,7 +88,8 @@ require('typstar').setup({ -- depending on your neovim plugin system
 1. Install [LuaSnip](https://github.com/L3MON4D3/LuaSnip/), set `enable_autosnippets = true` and set a visual mode selection key (e.g. `store_selection_keys = '<Tab>'`) in the configuration
 2. Install [jsregexp](https://github.com/kmarius/jsregexp) as described [here](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#transformations) (You will see a warning on startup if jsregexp isn't installed properly)
 3. Install [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) and run `:TSInstall typst`
-4. Optional: Setup [ctheorems](https://typst.app/universe/package/ctheorems/) with names like [here](./lua/typstar/snippets/markup.lua)
+4. Make sure you haven't remapped `<C-g>`. Otherwise set `add_undo_breakpoints = false` in the [config](#configuration)
+5. Optional: Setup [ctheorems](https://typst.app/universe/package/ctheorems/) with names like [here](./lua/typstar/snippets/markup.lua)
 
 ### Excalidraw
 1. Install [Obsidian](https://obsidian.md/) and create a vault in your typst note taking directory
@@ -136,6 +139,10 @@ The [config](#configuration) allows you to
 - disable all snippets via `snippets.enable = false`
 - only include specific modules from the snippets folder via e.g. `snippets.modules = { 'letters' }`
 - exclude specific triggers via e.g. `snippets.exclude = { 'dx', 'ddx' }`
+- disable different behaviors of snippets from the `visual` module
+    - visual selection via e.g. `snippets.visual_disable = { 'br' }`
+    - normal snippets (`abs` &#8594; `abs(1+1)`) via e.g. `snippets.visual_disable_normal = { 'abs' }`
+    - postfix snippets (`xabs` &#8594; `abs(x)`) via e.g. `snippets.visual_disable_postfix = { 'abs' }`
 
 For further customization you can make use of the provided wrappers from within your [LuaSnip](https://github.com/L3MON4D3/LuaSnip/) config.
 Let's say you prefer the short `=>` arrow over the long `==>` one and would like to change the `ip` trigger to `imp`.

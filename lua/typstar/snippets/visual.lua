@@ -7,10 +7,17 @@ local t = ls.text_node
 
 local helper = require('typstar.autosnippets')
 local utils = require('typstar.utils')
+local cfg = require('typstar.config').config.snippets
 local math = helper.in_math
 local snip = helper.snip
 
 local snippets = {}
+local visual_disable = {}
+local visual_disable_normal = {}
+local visual_disable_postfix = {}
+utils.generate_bool_set(cfg.visual_disable, visual_disable)
+utils.generate_bool_set(cfg.visual_disable_normal, visual_disable_normal)
+utils.generate_bool_set(cfg.visual_disable_postfix, visual_disable_postfix)
 
 local operations = { -- first boolean: existing brackets should be kept; second boolean: brackets should be added
     { 'vi', '1/', '', true, false },
@@ -68,17 +75,31 @@ local smart_wrap = function(args, parent, old_state, expand)
     local cursor = utils.get_cursor_pos()
     local root = utils.get_treesitter_root(bufnr)
 
-    if process_ts_query(bufnr, cursor, ts_wrapnobrackets_query, root, expand[2], expand[3], expand[4] and 0 or 1) then
-        return s(nil, t())
-    end
-
+    local trigger = expand[1]
     local expand1 = expand[5] and expand[2] .. '(' or expand[2]
     local expand2 = expand[5] and expand[3] .. ')' or expand[3]
-    if process_ts_query(bufnr, cursor, ts_wrap_query, root, expand1, expand2) then return s(nil, t()) end
-    if #parent.env.LS_SELECT_RAW > 0 then
+
+    -- visual selection
+    if not visual_disable[trigger] and #parent.env.LS_SELECT_RAW > 0 then
         return s(nil, t(expand1 .. table.concat(parent.env.LS_SELECT_RAW) .. expand2))
     end
-    return s(nil, { t(expand1), i(1, '1+1'), t(expand2) })
+
+    -- postfix
+    if not visual_disable_postfix[trigger] then
+        if
+            process_ts_query(bufnr, cursor, ts_wrapnobrackets_query, root, expand[2], expand[3], expand[4] and 0 or 1)
+            or process_ts_query(bufnr, cursor, ts_wrap_query, root, expand1, expand2)
+        then
+            return s(nil, t())
+        end
+    end
+
+    -- normal snippet
+    if not visual_disable_normal[trigger] then
+        return s(nil, { t(expand1), i(1, '1+1'), t(expand2) })
+    else
+        return s(nil, t(trigger))
+    end
 end
 
 for _, val in pairs(operations) do
