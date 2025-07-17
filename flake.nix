@@ -56,8 +56,8 @@
                 typstar.setup({})
 
                 vim.keymap.set({'n', 'i'}, '<M-t>', '<Cmd>TypstarToggleSnippets<CR>', { silent = true, noremap = true })
-                vim.keymap.set({'n', 'i'}, '<M-j>', '<Cmd>TypstarSmartJump<CR>', { silent = true, noremap = true })
-                vim.keymap.set({'n', 'i'}, '<M-k>', '<Cmd>TypstarSmartJumpBack<CR>', { silent = true, noremap = true })
+                vim.keymap.set({'s', 'i'}, '<M-j>', '<Cmd>TypstarSmartJump<CR>', { silent = true, noremap = true })
+                vim.keymap.set({'s', 'i'}, '<M-k>', '<Cmd>TypstarSmartJumpBack<CR>', { silent = true, noremap = true })
                 EOF
               '';
               plugins = [
