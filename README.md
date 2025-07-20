@@ -84,6 +84,67 @@ require('typstar').setup({ -- depending on your neovim plugin system
 })
 ```
 
+<details>
+<summary>Example lazy.nvim config</summary>
+
+```lua
+{
+    "arne314/typstar",
+    dependencies = {
+        "L3MON4D3/LuaSnip",
+    },
+    ft = { "typst" },
+    keys = {
+        {
+            "<M-t>",
+            "<Cmd>TypstarToggleSnippets<CR>",
+            mode = { "n", "i" },
+        },
+        {
+            "<M-j>",
+            "<Cmd>TypstarSmartJump<CR>",
+            mode = { "s", "i" },
+        },
+        {
+            "<M-k>",
+            "<Cmd>TypstarSmartJumpBack<CR>",
+            mode = { "s", "i" },
+        },
+    },
+    config = function()
+        local typstar = require("typstar")
+        typstar.setup({
+            -- your typstar configuration
+            add_undo_breakpoints = true,
+        })
+    end,
+},
+{
+    "L3MON4D3/LuaSnip",
+    version = "v2.*",
+    build = "make install_jsregexp",
+    config = function()
+        local luasnip = require("luasnip")
+        luasnip.config.setup({
+            enable_autosnippets = true,
+            store_selection_keys = "<Tab>",
+        })
+    end,
+},
+{
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    lazy = false,
+    config = function()
+        local configs = require("nvim-treesitter.configs")
+        configs.setup({
+            ensure_installed = { "typst" },
+        })
+    end,
+},
+```
+</details>
+
 ### Snippets
 1. Install [LuaSnip](https://github.com/L3MON4D3/LuaSnip/), set `enable_autosnippets = true` and set a visual mode selection key (e.g. `store_selection_keys = '<Tab>'`) in the configuration
 2. Install [jsregexp](https://github.com/kmarius/jsregexp) as described [here](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#transformations) (You will see a warning on startup if jsregexp isn't installed properly)
