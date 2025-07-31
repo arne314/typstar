@@ -15,7 +15,7 @@ local ts_string_query = ts.query.parse('typst', '(string) @string')
 
 utils.generate_bool_set(cfg.exclude, exclude_triggers_set)
 vim.api.nvim_create_autocmd('TextChangedI', {
-    callback = function() last_keystroke_time = vim.loop.now() end,
+    callback = function() last_keystroke_time = vim.uv.now() end,
 })
 
 M.in_math = function()
