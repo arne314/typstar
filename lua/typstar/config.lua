@@ -18,9 +18,10 @@ local default_config = {
     },
     rnote = {
         assetsDir = 'assets',
+        exportCommand = 'rnote-cli export doc --no-background --no-pattern --on-conflict overwrite --output-file %s %s',
         filename = 'drawing-%Y-%m-%d-%H-%M-%S',
         fileExtension = '.rnote',
-        fileExtensionInserted = '.rnote.svg',
+        fileExtensionInserted = '.rnote.svg', -- valid rnote export type
         uriOpenCommand = 'xdg-open', -- see comment above for excalidraw
         templatePath = {},
     },

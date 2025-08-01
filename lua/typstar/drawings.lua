@@ -10,7 +10,7 @@ local affix = [[
 local config_excalidraw = config.config.excalidraw
 local config_rnote = config.config.rnote
 
-local function launch_excalidraw(path)
+local function launch_excalidraw(path, path_inserted)
     print(string.format('Opening %s in Obsidian Excalidraw', path))
     utils.run_shell_command(
         string.format('%s "obsidian://open?path=%s"', config_excalidraw.uriOpenCommand, utils.urlencode(path)),
@@ -18,9 +18,32 @@ local function launch_excalidraw(path)
     )
 end
 
-local function launch_rnote(path)
+local rnote_watched = {}
+
+local function auto_export_rnote(path, path_inserted)
+    if rnote_watched[path] then return end
+    rnote_watched[path] = true
+    local job_id = -1
+    local last_export = 0
+
+    local run_export = function(err, filename)
+        local time = vim.uv.now()
+        if err ~= nil or time - last_export < 800 then return end
+
+        if job_id == -1 then
+            last_export = time
+            local cmd = string.format(config_rnote.exportCommand, path_inserted, path)
+            job_id = utils.run_shell_command(cmd, false, nil, { on_exit = function() job_id = -1 end })
+        end
+    end
+    local watcher = vim.uv.new_fs_event()
+    watcher:start(path, {}, vim.schedule_wrap(run_export))
+end
+
+local function launch_rnote(path, path_inserted)
     print(string.format('Opening %s in Rnote', path))
     utils.run_shell_command(string.format('%s %s', config_rnote.uriOpenCommand, path), false)
+    auto_export_rnote(path, path_inserted)
 end
 
 local function insert_drawing(provider)
@@ -47,7 +70,7 @@ local function insert_drawing(provider)
     end
 
     utils.insert_text_block(string.format(provider[2], path_inserted))
-    provider[3](path)
+    provider[3](path, path_inserted)
 end
 
 local excalidraw = {
@@ -72,7 +95,8 @@ function M.open_drawing()
         local filename = line:match('"(.*)' .. string.gsub(cfg.fileExtensionInserted, '%.', '%%%.'))
         if filename ~= nil and filename:match('^%s*$') == nil then
             local path = vim.fn.expand('%:p:h') .. '/' .. filename .. cfg.fileExtension
-            provider[3](path) -- launch program
+            local path_inserted = vim.fn.expand('%:p:h') .. '/' .. filename .. cfg.fileExtensionInserted
+            provider[3](path, path_inserted) -- launch program
             break
         end
     end
