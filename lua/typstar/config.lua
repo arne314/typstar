@@ -13,8 +13,16 @@ local default_config = {
         filename = 'drawing-%Y-%m-%d-%H-%M-%S',
         fileExtension = '.excalidraw.md',
         fileExtensionInserted = '.excalidraw.svg',
-        uriOpenCommand = 'xdg-open', -- set depending on OS
-        templatePath = nil,
+        uriOpenCommand = 'xdg-open', -- set depending on OS; try setting it to "obsidian" directly if you encounter problems and have it in your PATH
+        templatePath = {},
+    },
+    rnote = {
+        assetsDir = 'assets',
+        filename = 'drawing-%Y-%m-%d-%H-%M-%S',
+        fileExtension = '.rnote',
+        fileExtensionInserted = '.rnote.svg',
+        uriOpenCommand = 'xdg-open', -- see comment above for excalidraw
+        templatePath = {},
     },
     snippets = {
         enable = true,
@@ -38,10 +46,12 @@ function M.merge_config(args)
     M.config.typstarRoot = M.config.typstarRoot
         or debug.getinfo(1).source:match('^@(.*)/lua/typstar/config%.lua$')
         or '~/typstar'
-    M.config.excalidraw.templatePath = M.config.excalidraw.templatePath
-        or {
-            ['%.excalidraw%.md$'] = M.config.typstarRoot .. '/res/excalidraw_template.excalidraw.md',
-        }
+    vim.list_extend(M.config.excalidraw.templatePath, {
+        { '%.excalidraw%.md$', M.config.typstarRoot .. '/res/excalidraw_template.excalidraw.md' },
+    })
+    vim.list_extend(M.config.rnote.templatePath, {
+        { '%.rnote$', M.config.typstarRoot .. '/res/rnote_template.rnote' },
+    })
 end
 
 M.merge_config(nil)
