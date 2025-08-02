@@ -38,12 +38,15 @@ function M.run_shell_command(cmd, show_output, extra_handler, opts)
         end
     end
     if show_output then
-        return vim.fn.jobstart(cmd, vim.tbl_deep_extend({
-            on_stdout = function(_, data, _) handle_output(data, false) end,
-            on_stderr = function(_, data, _) handle_output(data, true) end,
-            stdout_buffered = false,
-            stderr_buffered = true,
-        }, opts, "force"))
+        return vim.fn.jobstart(
+            cmd,
+            vim.tbl_deep_extend('force', {
+                on_stdout = function(_, data, _) handle_output(data, false) end,
+                on_stderr = function(_, data, _) handle_output(data, true) end,
+                stdout_buffered = false,
+                stderr_buffered = true,
+            }, opts)
+        )
     else
         return vim.fn.jobstart(cmd, opts)
     end
