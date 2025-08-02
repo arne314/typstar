@@ -42,6 +42,8 @@
                 lua << EOF
                 print("Welcome to Typstar! This is just a demo.")
 
+                vim.g.mapleader = " "
+
                 require('nvim-treesitter.configs').setup {
                   highlight = { enable = true },
                 }
@@ -58,6 +60,12 @@
                 vim.keymap.set({'n', 'i'}, '<M-t>', '<Cmd>TypstarToggleSnippets<CR>', { silent = true, noremap = true })
                 vim.keymap.set({'s', 'i'}, '<M-j>', '<Cmd>TypstarSmartJump<CR>', { silent = true, noremap = true })
                 vim.keymap.set({'s', 'i'}, '<M-k>', '<Cmd>TypstarSmartJumpBack<CR>', { silent = true, noremap = true })
+
+                vim.keymap.set('n', '<leader>e', '<Cmd>TypstarInsertExcalidraw<CR>', { silent = true, noremap = true })
+                vim.keymap.set('n', '<leader>r', '<Cmd>TypstarInsertRnote<CR>', { silent = true, noremap = true })
+                vim.keymap.set('n', '<leader>o', '<Cmd>TypstarOpenDrawing<CR>', { silent = true, noremap = true })
+
+                vim.keymap.set('n', '<leader>a', '<Cmd>TypstarAnkiScan<CR>', { silent = true, noremap = true })
                 EOF
               '';
               plugins = [
