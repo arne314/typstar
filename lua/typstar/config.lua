@@ -1,7 +1,7 @@
 local M = {}
 
 local default_config = {
-    typstarRoot = nil,
+    typstarRoot = nil, -- typstar installation location required to use default drawing templates (usually determined automatically)
     anki = {
         typstarAnkiCmd = 'typstar-anki',
         typstCmd = 'typst',
@@ -22,7 +22,7 @@ local default_config = {
         filename = 'drawing-%Y-%m-%d-%H-%M-%S',
         fileExtension = '.rnote',
         fileExtensionInserted = '.rnote.svg', -- valid rnote export type
-        uriOpenCommand = 'xdg-open', -- see comment above for excalidraw
+        openCommand = 'xdg-open', -- see comment above for excalidraw
         templatePath = {},
     },
     snippets = {

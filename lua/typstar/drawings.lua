@@ -42,7 +42,7 @@ end
 
 local function launch_rnote(path, path_inserted)
     print(string.format('Opening %s in Rnote', path))
-    utils.run_shell_command(string.format('%s %s', config_rnote.uriOpenCommand, path), false)
+    utils.run_shell_command(string.format('%s %s', config_rnote.openCommand, path), false)
     auto_export_rnote(path, path_inserted)
 end
 
