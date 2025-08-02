@@ -85,11 +85,8 @@ local rnote = {
 }
 local providers = { excalidraw, rnote }
 
-function M.insert_obsidian_excalidraw() insert_drawing(excalidraw) end
-function M.insert_rnote() insert_drawing(rnote) end
-
-function M.open_drawing()
-    for _, provider in pairs(providers) do
+local open_drawing = function(prov)
+    for _, provider in ipairs(prov) do
         local cfg = provider[1]
         local line = vim.api.nvim_get_current_line()
         local filename = line:match('"(.*)' .. string.gsub(cfg.fileExtensionInserted, '%.', '%%%.'))
@@ -101,5 +98,11 @@ function M.open_drawing()
         end
     end
 end
+
+function M.insert_obsidian_excalidraw() insert_drawing(excalidraw) end
+function M.insert_rnote() insert_drawing(rnote) end
+function M.open_obsidian_excalidraw() open_drawing({ excalidraw }) end
+function M.open_rnote() open_drawing({ rnote }) end
+function M.open_drawing() open_drawing(providers) end
 
 return M

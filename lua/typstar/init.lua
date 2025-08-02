@@ -15,6 +15,8 @@ M.setup = function(args)
 
     vim.api.nvim_create_user_command('TypstarInsertExcalidraw', drawings.insert_obsidian_excalidraw, {})
     vim.api.nvim_create_user_command('TypstarInsertRnote', drawings.insert_rnote, {})
+    vim.api.nvim_create_user_command('TypstarOpenExcalidraw', drawings.open_obsidian_excalidraw, {})
+    vim.api.nvim_create_user_command('TypstarOpenRnote', drawings.open_rnote, {})
     vim.api.nvim_create_user_command('TypstarOpenDrawing', drawings.open_drawing, {})
 
     vim.api.nvim_create_user_command('TypstarAnkiScan', anki.scan, {})

@@ -37,7 +37,8 @@ Note that you can [customize](#custom-snippets) (enable, disable and modify) eve
   create a new drawing using the [configured](#configuration) template,
   insert a figure displaying it and open it in Obsidian/Rnote.
 - To open an inserted drawing in Obsidian/Rnote,
-  simply run `:TypstarOpenDrawing` while your cursor is on a line referencing the drawing.
+  simply run `:TypstarOpenDrawing` (or `:TypstarOpenExcalidraw`/`:TypstarOpenRnote` if you are using the same file extension for both)
+  while your cursor is on a line referencing the drawing.
 
 ### Anki
 Use the `flA` snippet to create a new flashcard
