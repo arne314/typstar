@@ -1,9 +1,9 @@
 # Typstar
-Neovim plugin for efficient note taking in Typst
+Neovim plugin for efficient (mathematical) note taking in Typst
 
 ## Features
 - Powerful autosnippets using [LuaSnip](https://github.com/L3MON4D3/LuaSnip/) and [Tree-sitter](https://tree-sitter.github.io/) (inspired by [fastex.nvim](https://github.com/lentilus/fastex.nvim))
-- Easy insertion of drawings using [Obsidian Excalidraw](https://github.com/zsviczian/obsidian-excalidraw-plugin)
+- Easy insertion of drawings using [Obsidian Excalidraw](https://github.com/zsviczian/obsidian-excalidraw-plugin) or [Rnote](https://github.com/flxzt/rnote)
 - Export of [Anki](https://apps.ankiweb.net/) flashcards \[No Neovim required\]
 
 ## Usage
@@ -38,9 +38,13 @@ Math snippets:
 
 Note that you can [customize](#custom-snippets) (enable, disable and modify) every snippet.
 
-### Excalidraw
-- Use `:TypstarInsertExcalidraw` to create a new drawing using the configured template, insert a figure displaying it and open it in Obsidian.
-- To open an inserted drawing in Obsidian, simply run `:TypstarOpenExcalidraw` while your cursor is on a line referencing the drawing.
+### Excalidraw/Rnote
+- Use `:TypstarInsertExcalidraw`/`:TypstarInsertRnote` to
+  create a new drawing using the [configured](#configuration) template,
+  insert a figure displaying it and open it in Obsidian/Rnote.
+- To open an inserted drawing in Obsidian/Rnote,
+  simply run `:TypstarOpenDrawing` (or `:TypstarOpenExcalidraw`/`:TypstarOpenRnote` if you are using the same file extension for both)
+  while your cursor is on a line referencing the drawing.
 
 ### Anki
 Use the `flA` snippet to create a new flashcard
@@ -162,7 +166,13 @@ require('typstar').setup({ -- depending on your neovim plugin system
 1. Install [Obsidian](https://obsidian.md/) and create a vault in your typst note taking directory
 2. Install the [obsidian-excalidraw-plugin](https://github.com/zsviczian/obsidian-excalidraw-plugin) and enable `Auto-export SVG` (in plugin settings at `Embedding Excalidraw into your Notes and Exporting > Export Settings > Auto-export Settings`)
 3. Have the `xdg-open` command working or set a different command at `uriOpenCommand` in the [config](#configuration)
-4. If you encounter issues try cloning the repo into `~/typstar` or setting the `typstarRoot` config accordingly, feel free to open an issue
+4. If you encounter issues with the file creation of drawings, try cloning the repo into `~/typstar` or setting the `typstarRoot` config accordingly; feel free to open an issue
+
+### Rnote
+1. Install [Rnote](https://github.com/flxzt/rnote?tab=readme-ov-file#installation); I recommend not using flatpak as that might cause issues with file permissions.
+2. Make sure `rnote-cli` is available in your `PATH` or set a different command at `exportCommand` in the [config](#configuration)
+3. Have the `xdg-open` command working with Rnote files or set a different command at `openCommand` in the [config](#configuration)
+4. See comment 4 above at Excalidraw
 
 ### Anki
 0. Typst version `0.12.0` or higher is required
@@ -200,6 +210,16 @@ with pkgs; [
 
 ## Configuration
 Configuration options can be intuitively derived from the table [here](./lua/typstar/config.lua).
+
+### Excalidraw/Rnote templates
+The `templatePath` option expects a table that maps file patterns to template locations.
+To for example have a specific template for lectures, you could configure it like this
+```Lua
+templatePath = {
+    { 'lectures/.*%.excalidraw%.md$', '~/Templates/lecture_excalidraw.excalidraw.md' }, -- path contains "lectures"
+    { '%.excalidraw%.md$', '~/Templates/default_excalidraw.excalidraw.md' }, -- fallback
+},
+```
 
 ### Custom snippets
 The [config](#configuration) allows you to

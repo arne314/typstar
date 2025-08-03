@@ -26,8 +26,9 @@ function M.insert_text_block(snip)
     vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), line_num, line_num, false, lines)
 end
 
-function M.run_shell_command(cmd, show_output, extra_handler)
+function M.run_shell_command(cmd, show_output, extra_handler, opts)
     extra_handler = extra_handler or function(msg) end
+    opts = opts or { on_exit = function() end }
     local handle_output = function(data, err)
         local msg = table.concat(data, '\n')
         if not string.match(msg, '^%s*$') then
@@ -37,14 +38,17 @@ function M.run_shell_command(cmd, show_output, extra_handler)
         end
     end
     if show_output then
-        vim.fn.jobstart(cmd, {
-            on_stdout = function(_, data, _) handle_output(data, false) end,
-            on_stderr = function(_, data, _) handle_output(data, true) end,
-            stdout_buffered = false,
-            stderr_buffered = true,
-        })
+        return vim.fn.jobstart(
+            cmd,
+            vim.tbl_deep_extend('force', {
+                on_stdout = function(_, data, _) handle_output(data, false) end,
+                on_stderr = function(_, data, _) handle_output(data, true) end,
+                stdout_buffered = false,
+                stderr_buffered = true,
+            }, opts)
+        )
     else
-        vim.fn.jobstart(cmd)
+        return vim.fn.jobstart(cmd, opts)
     end
 end
 
