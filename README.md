@@ -33,6 +33,7 @@ Math snippets:
 - [Many shorthands](./lua/typstar/snippets/math.lua) for mathematical expressions
 - Series of numbered letters: `<letter> ot<optional last index> ` &#8594; `<letter>_1, <letter>_2, ... ` (e.g. `a ot ` &#8594; `a_1, a_2, ... `, `a ot4 ` &#8594; `a_1, a_2, a_3, a_4 `, `alpha otk ` &#8594; `alpha_1, alpha_2, ..., alpha_k `)
 - Wrapping of any mathematical expression (see [operations](./lua/typstar/snippets/visual.lua), works nested, multiline and in visual mode via the [selection key](#installation)): `<expression><operation>` &#8594; `<operation>(<expression>)` (e.g. `(a^2+b^2)rt` &#8594; `sqrt(a^2+b^2)`, `lambdatd` &#8594; `tilde(lambda)`, `(1+1)sQ` &#8594; `[1+1]`, `(1+1)sq` &#8594; `[(1+1)]`)
+- Simple functions: `fo<value> ` &#8594; `f(<value>) ` (e.g. `fox ` &#8594; `f(x) `, `ao5 ` &#8594; `a(5) `)
 - Matrices: `<size>ma` and `<size>lma` (e.g. `23ma` &#8594; 2x3 matrix)
 
 Note that you can [customize](#custom-snippets) (enable, disable and modify) every snippet.
