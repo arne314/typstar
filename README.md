@@ -205,6 +205,16 @@ with pkgs; [
 ## Configuration
 Configuration options can be intuitively derived from the table [here](./lua/typstar/config.lua).
 
+### Excalidraw/Rnote templates
+The `templatePath` option expects a table that maps file patterns to template locations.
+To for example have a specific template for lectures, you could configure it like this
+```Lua
+templatePath = {
+    { 'lectures/.*%.excalidraw%.md$', '~/Templates/lecture_excalidraw.excalidraw.md' }, -- path contains "lectures"
+    { '%.excalidraw%.md$', '~/Templates/default_excalidraw.excalidraw.md' }, -- fallback
+},
+```
+
 ### Custom snippets
 The [config](#configuration) allows you to
 - disable all snippets via `snippets.enable = false`
