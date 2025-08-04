@@ -73,9 +73,9 @@ return {
     snip('Oo', 'compose ', {}, math),
     snip('iso', 'tilde.equiv ', {}, math),
     snip('cc', 'cases(\n\t<>\n)\\', { i(1, '1') }, math),
-    snip('([A-Za-z])o([A-Za-z0-9])', '<>(<>) ', { cap(1), cap(2) }, math, 100, {
-        maxTrigLength = 3,
-        blacklist = { 'bot', 'col', 'com', 'con', 'cos', 'cot', 'dol', 'dot', 'log', 'loz', 'mod', 'roo', 'top', 'won', 'xor' },
+    snip('([A-Za-z])o([A-Za-z0-9]) ', '<>(<>) ', { cap(1), cap(2) }, math, 100, {
+        maxTrigLength = 4,
+        blacklist = { 'bot ', 'cos ',  'cot ',  'dot ',  'log ',  'mod ', 'top ',  'won ',  'xor ' },
     }),
     snip('(K|M|N|Q|R|S|Z)([\\dn]) ', '<><>^<> ', { cap(1), cap(1), cap(2) }, math),
 

@@ -6,15 +6,18 @@ local luasnip = nil
 M.setup = function(args)
     config.merge_config(args)
     local autosnippets = require('typstar.autosnippets')
-    local excalidraw = require('typstar.excalidraw')
+    local drawings = require('typstar.drawings')
     local anki = require('typstar.anki')
 
     vim.api.nvim_create_user_command('TypstarToggleSnippets', autosnippets.toggle_autosnippets, {})
     vim.api.nvim_create_user_command('TypstarSmartJump', function() M.smart_jump(1) end, {})
     vim.api.nvim_create_user_command('TypstarSmartJumpBack', function() M.smart_jump(-1) end, {})
 
-    vim.api.nvim_create_user_command('TypstarInsertExcalidraw', excalidraw.insert_drawing, {})
-    vim.api.nvim_create_user_command('TypstarOpenExcalidraw', excalidraw.open_drawing, {})
+    vim.api.nvim_create_user_command('TypstarInsertExcalidraw', drawings.insert_obsidian_excalidraw, {})
+    vim.api.nvim_create_user_command('TypstarInsertRnote', drawings.insert_rnote, {})
+    vim.api.nvim_create_user_command('TypstarOpenExcalidraw', drawings.open_obsidian_excalidraw, {})
+    vim.api.nvim_create_user_command('TypstarOpenRnote', drawings.open_rnote, {})
+    vim.api.nvim_create_user_command('TypstarOpenDrawing', drawings.open_drawing, {})
 
     vim.api.nvim_create_user_command('TypstarAnkiScan', anki.scan, {})
     vim.api.nvim_create_user_command('TypstarAnkiReimport', anki.scan_reimport, {})
