@@ -10,7 +10,7 @@ local affix = [[
 local config_excalidraw = config.config.excalidraw
 local config_rnote = config.config.rnote
 
-local function launch_excalidraw(path, path_inserted)
+local function launch_excalidraw(path, path_export)
     print(string.format('Opening %s in Obsidian Excalidraw', path))
     utils.run_shell_command(
         string.format('%s "obsidian://open?path=%s"', config_excalidraw.uriOpenCommand, utils.urlencode(path)),
@@ -20,7 +20,7 @@ end
 
 local rnote_watched = {}
 
-local function auto_export_rnote(path, path_inserted)
+local function auto_export_rnote(path, path_export)
     if rnote_watched[path] then return end
     rnote_watched[path] = true
     local job_id = -1
@@ -32,7 +32,7 @@ local function auto_export_rnote(path, path_inserted)
 
         if job_id == -1 then
             last_export = time
-            local cmd = string.format(config_rnote.exportCommand, path_inserted, path)
+            local cmd = string.format(config_rnote.exportCommand, path_export, path, path_export, path)
             job_id = utils.run_shell_command(cmd, false, nil, { on_exit = function() job_id = -1 end })
         end
     end
@@ -40,10 +40,10 @@ local function auto_export_rnote(path, path_inserted)
     watcher:start(path, {}, vim.schedule_wrap(run_export))
 end
 
-local function launch_rnote(path, path_inserted)
+local function launch_rnote(path, path_export)
     print(string.format('Opening %s in Rnote', path))
     utils.run_shell_command(string.format('%s %s', config_rnote.uriOpenCommand, path), false)
-    auto_export_rnote(path, path_inserted)
+    auto_export_rnote(path, path_export)
 end
 
 local function insert_drawing(provider)
@@ -51,7 +51,8 @@ local function insert_drawing(provider)
     local assets_dir = vim.fn.expand('%:p:h') .. '/' .. cfg.assetsDir
     local filename = os.date(cfg.filename)
     local path = assets_dir .. '/' .. filename .. cfg.fileExtension
-    local path_inserted = cfg.assetsDir .. '/' .. filename .. cfg.fileExtensionInserted
+    local path_export = assets_dir .. '/' .. filename .. cfg.fileExtensionInserted
+    local path_insert = cfg.assetsDir .. '/' .. filename .. cfg.fileExtensionInserted -- local relative path
 
     if vim.fn.isdirectory(assets_dir) == 0 then vim.fn.mkdir(assets_dir, 'p') end
     local found_match = false
@@ -60,7 +61,14 @@ local function insert_drawing(provider)
         local template_path = template_config[2]
         if string.match(path, pattern) then
             found_match = true
-            utils.run_shell_command(string.format('cat %s > %s', template_path, path), false) -- don't copy file metadata
+            -- use cat as we don't want to copy file metadata
+            utils.run_shell_command(string.format('cat %s > %s', template_path, path), false, nil, {
+                on_exit = function()
+                    -- insert text and launch program
+                    utils.insert_text_block(string.format(provider[2], path_insert))
+                    provider[3](path, path_export)
+                end,
+            })
             break
         end
     end
@@ -68,9 +76,6 @@ local function insert_drawing(provider)
         print('No matching template found for path: ' .. path)
         return
     end
-
-    utils.insert_text_block(string.format(provider[2], path_inserted))
-    provider[3](path, path_inserted)
 end
 
 local excalidraw = {
@@ -92,8 +97,8 @@ local open_drawing = function(prov)
         local filename = line:match('"(.*)' .. string.gsub(cfg.fileExtensionInserted, '%.', '%%%.'))
         if filename ~= nil and filename:match('^%s*$') == nil then
             local path = vim.fn.expand('%:p:h') .. '/' .. filename .. cfg.fileExtension
-            local path_inserted = vim.fn.expand('%:p:h') .. '/' .. filename .. cfg.fileExtensionInserted
-            provider[3](path, path_inserted) -- launch program
+            local path_export = vim.fn.expand('%:p:h') .. '/' .. filename .. cfg.fileExtensionInserted
+            provider[3](path, path_export) -- launch program
             break
         end
     end

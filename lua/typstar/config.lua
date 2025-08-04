@@ -18,7 +18,8 @@ local default_config = {
     },
     rnote = {
         assetsDir = 'assets',
-        exportCommand = 'rnote-cli export selection --no-background --no-pattern --on-conflict overwrite --output-file %s all %s', -- can be modified to e.g. export full pages
+        -- can be modified to e.g. export full pages; default is to try to export strokes only and otherwise export the entire document
+        exportCommand = 'rnote-cli export selection --no-background --no-pattern --on-conflict overwrite --output-file %s all %s || rnote-cli export doc --no-background --no-pattern --on-conflict overwrite --output-file %s %s',
         filename = 'drawing-%Y-%m-%d-%H-%M-%S',
         fileExtension = '.rnote',
         fileExtensionInserted = '.rnote.svg', -- valid rnote export type
