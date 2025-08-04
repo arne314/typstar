@@ -171,7 +171,7 @@ require('typstar').setup({ -- depending on your neovim plugin system
 ### Rnote
 1. Install [Rnote](https://github.com/flxzt/rnote?tab=readme-ov-file#installation); I recommend not using flatpak as that might cause issues with file permissions.
 2. Make sure `rnote-cli` is available in your `PATH` or set a different command at `exportCommand` in the [config](#configuration)
-3. Have the `xdg-open` command working with Rnote files or set a different command at `openCommand` in the [config](#configuration)
+3. Have the `xdg-open` command working with Rnote files or set a different command at `uriOpenCommand` in the [config](#configuration)
 4. See comment 4 above at Excalidraw
 
 ### Anki

@@ -22,7 +22,7 @@ local default_config = {
         filename = 'drawing-%Y-%m-%d-%H-%M-%S',
         fileExtension = '.rnote',
         fileExtensionInserted = '.rnote.svg', -- valid rnote export type
-        openCommand = 'xdg-open', -- see comment above for excalidraw
+        uriOpenCommand = 'xdg-open', -- see comment above for excalidraw
         templatePath = {},
     },
     snippets = {
