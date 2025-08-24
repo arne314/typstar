@@ -17,7 +17,7 @@ Available snippets can mostly be intuitively derived from [here](././lua/typstar
 Universal snippets:
 - Alphanumeric characters: `:<char>` &#8594; `$<char>$ ` in markup (e.g. `:X` &#8594; `$X$ `, `:5` &#8594; `$5$ `)
 - Greek letters: `;<latin>` &#8594; `<greek>` in math and `$<greek>$ ` in markup (e.g. `;a` &#8594; `alpha`/`$alpha$ `)
-- Common indices (numbers and letters `i-n`): `<letter><index> ` &#8594; `<letter>_<index> ` in math and `$<letter>$<index> ` &#8594; `$<letter>_<index>$ ` in markup (e.g `A314 ` &#8594; `A_314 `, `$alpha$n ` &#8594; `$alpha_n$ `)
+- Common indices (numbers and letters `i-n`): `<letter><index> ` &#8594; `<letter>_<index> ` in math and `$<letter>$ <index> ` &#8594; `$<letter>_<index>$ ` in markup (e.g `A314 ` &#8594; `A_314 `, `$alpha$ n ` &#8594; `$alpha_n$ `)
 
 You can find a complete map of latin to greek letters including reasons for the less intuitive ones [here](./lua/typstar/snippets/letters.lua).
 Note that some greek letters have multiple latin ones mapped to them.
