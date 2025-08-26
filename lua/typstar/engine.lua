@@ -124,7 +124,7 @@ function M.engine(trigger, opts)
 
         -- custom word trig
         local from = #line - #whole + 1
-        if opts.wordTrig and from ~= 1 and string.match(string.sub(line, from - 1, from - 1), '[%w.]') ~= nil then
+        if opts.wordTrig and from ~= 1 and string.match(line:sub(from - 1, from - 1), '[%w._]') ~= nil then
             return nil
         end
 
