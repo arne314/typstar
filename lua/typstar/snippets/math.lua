@@ -94,6 +94,9 @@ return {
     snip('osm', 'sum_Omega ', {}, math),
     snip('dsm', 'sum_(<>) ', { i(1, 'I') }, math),
 
+    snip('prd', 'product ', {}, math),
+    snip('prod', 'product_(<>)^(<>) ', { i(1, 'k=1'), i(2, 'n') }, math),
+
     snip('lm', 'lim ', {}, math),
     snip('lim', 'lim_(<> ->> <>) ', { i(1, 'n'), i(2, 'oo') }, math),
     snip('lim (sup|inf)', 'lim<> ', { cap(1) }, math),
