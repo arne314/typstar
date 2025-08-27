@@ -84,15 +84,15 @@ return {
     snip('DX', 'diff / (diff <>) ', { i(1, 'x') }, math, 900),
     snip('DDX', '(diff <>) / (diff <>) ', { i(1, 'f'), i(2, 'x') }, math),
     snip('part', 'partial ', {}, math, 1600),
+
     snip('it', 'integral ', {}, math, 900),
     snip('int', 'integral_(<>)^(<>) ', { i(1, 'a'), i(2, 'b') }, math),
-    snip('oit', 'integral_Omega ', {}, math),
+    snip('oit', 'integral.cont_(<>) ', { i(1, 'C') }, math),
     snip('dit', 'integral_(<>) ', { i(1, 'Omega') }, math),
 
     snip('sm', 'sum ', {}, math, 900),
-    snip('sum', 'sum_(<>)^(<>) ', { i(1, 'i=0'), i(2, 'oo') }, math),
-    snip('osm', 'sum_Omega ', {}, math),
-    snip('dsm', 'sum_(<>) ', { i(1, 'I') }, math),
+    snip('sum', 'sum_(<>)^(<>) ', { i(1, 'k=1'), i(2, 'oo') }, math),
+    snip('dsm', 'sum_(<>) ', { i(1, 'Omega') }, math),
 
     snip('prd', 'product ', {}, math),
     snip('prod', 'product_(<>)^(<>) ', { i(1, 'k=1'), i(2, 'n') }, math),
