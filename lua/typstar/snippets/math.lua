@@ -43,6 +43,7 @@ return {
     snip('oxx', 'times.circle ', {}, math),
     snip('bxx', 'times.square ', {}, math),
     snip('ff', '(<>) / (<>) <>', { i(1, 'a'), i(2, 'b'), i(3) }, math),
+    snip('nab', 'arrow(nabla) ', {}, math),
 
     -- exponents
     snip('iv', '^(-1) ', {}, math, 500, { wordTrig = false, blacklist = { 'equiv' } }),

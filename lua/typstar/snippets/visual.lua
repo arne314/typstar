@@ -37,6 +37,7 @@ local operations = { -- first boolean: existing brackets should be kept; second 
     { 'ht', 'hat', '', true, true },
     { 'br', 'macron', '', true, true },
     { 'dt', 'dot', '', true, true },
+    { 'dou', 'dot.double', '', true, true },
     { 'ci', 'circle', '', true, true },
     { 'td', 'tilde', '', true, true },
     { 'nr', 'norm', '', true, true },
