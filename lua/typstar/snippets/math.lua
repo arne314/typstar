@@ -55,7 +55,7 @@ return {
 
     -- sets
     -- 'st' to '{<>} in ./visual.lua
-    snip('set', '{<> | <>}', { i(1), i(2) }, math),
+    snip('set', '{<> mid(|) <>}', { i(1), i(2) }, math),
     snip('es', 'emptyset ', {}, math),
     snip('ses', '{emptyset} ', {}, math),
     snip('sp', 'supset ', {}, math),
