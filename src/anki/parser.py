@@ -41,8 +41,8 @@ deck_regex = re.compile(r"\W+ANKI:\s*([\S ]*)")
 class FlashcardParser:
     typst_language: tree_sitter.Language
     typst_parser: tree_sitter.Parser
-    flashcard_query: tree_sitter.Query
-    deck_query: tree_sitter.Query
+    flashcard_query_cursor: tree_sitter.Query
+    deck_query_cursor: tree_sitter.Query
 
     file_handlers: List[tuple[FileHandler, List[Flashcard]]]
     file_hashes: dict[str, str]
@@ -51,8 +51,10 @@ class FlashcardParser:
     def __init__(self):
         self.typst_language = tree_sitter.Language(get_typst_language())
         self.typst_parser = tree_sitter.Parser(self.typst_language)
-        self.flashcard_query = self.typst_language.query(ts_flashcard_query)
-        self.deck_query = self.typst_language.query(ts_deck_query)
+        self.flashcard_query_cursor = tree_sitter.QueryCursor(
+            self.typst_language.query(ts_flashcard_query)
+        )
+        self.deck_query_cursor = tree_sitter.QueryCursor(self.typst_language.query(ts_deck_query))
         self.file_handlers = []
         self._load_file_hashes()
 
@@ -61,10 +63,10 @@ class FlashcardParser:
     ) -> List[Flashcard]:
         cards = []
         tree = self.typst_parser.parse(file.get_bytes(), encoding="utf8")
-        card_captures = self.flashcard_query.captures(tree.root_node)
+        card_captures = self.flashcard_query_cursor.captures(tree.root_node)
         if not card_captures:
             return cards
-        deck_captures = self.deck_query.captures(tree.root_node)
+        deck_captures = self.deck_query_cursor.captures(tree.root_node)
 
         def row_compare(node):
             return node.start_point.row
