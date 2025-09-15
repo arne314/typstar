@@ -107,24 +107,23 @@ function M.engine(trigger, opts)
         local first_idx = 1
         if max_length ~= nil then
             first_idx = #line_full - max_length -- include additional char for wordtrig
-            if first_idx < 0 then
+            if first_idx < 1 then
                 if is_fixed_length then
                     return nil
                 else
                     first_idx = 1
                 end
             end
-            if first_idx > 0 then
-                if string.byte(line_full, first_idx) > 127 then return nil end
-            end
         end
+        if line_full:byte(first_idx) > 127 then first_idx = 1 end -- avoid splitting bytes within unicode characters
         local line = line_full:sub(first_idx)
         local whole, captures = base_engine(line, trig)
         if whole == nil then return nil end
 
         -- custom word trig
         local from = #line - #whole + 1
-        if opts.wordTrig and from ~= 1 and string.match(string.sub(line, from - 1, from - 1), '[%w.]') ~= nil then
+        local first_letter = line:sub(from - 1, from - 1)
+        if opts.wordTrig and from ~= 1 and (first_letter:byte(1) > 127 or first_letter:match('[%w._]') ~= nil) then
             return nil
         end
 

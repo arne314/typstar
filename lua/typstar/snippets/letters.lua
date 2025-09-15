@@ -129,8 +129,9 @@ return {
     ),
 
     -- series of numbered letters
+    snip('ot(\\w) ', '1, 2, ..., <> ', { cap(1) }, math, 800), -- 1, 2, ..., n
     snip('(' .. trigger_index_pre .. ') ot ', '<>_1, <>_2, ... ', { cap(1), cap(1) }, math), -- a_1, a_2, ...
-    snip('(' .. trigger_index_pre .. ') ot(\\w+) ', '<> ', { d(1, get_series) }, math, 1000, { maxTrigLength = 13 }), -- a_1, a_2, ... a_j or a_1, a_2, a_2, a_3, a_4, a_5
+    snip('(' .. trigger_index_pre .. ') ot(\\w+) ', '<> ', { d(1, get_series) }, math, nil, { maxTrigLength = 13 }), -- a_1, a_2, ... a_j or a_1, a_2, a_2, a_3, a_4, a_5
 
     -- misc
     snip('(' .. trigger_index_pre .. ')bl', 'B_<> (<>) ', { cap(1), i(1, 'x_0') }, math, 100),
