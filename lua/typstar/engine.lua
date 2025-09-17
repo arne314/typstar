@@ -106,9 +106,10 @@ function M.engine(trigger, opts)
         if not M.snippets_toggle or not condition() then return nil end
         local first_idx = 1
         if max_length ~= nil then
-            first_idx = #line_full - max_length -- include additional char for wordtrig
+            -- include additional char for wordtrig
+            first_idx = #line_full - max_length
             if first_idx < 1 then
-                if is_fixed_length then
+                if is_fixed_length and first_idx < 0 then
                     return nil
                 else
                     first_idx = 1
