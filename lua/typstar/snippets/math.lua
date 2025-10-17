@@ -34,11 +34,11 @@ return {
     snip('ge', '>>= ', {}, math),
 
     -- operators
-    snip('ak([^k ])', '+ <>', { cap(1) }, math, 100, { wordTrig = false }),
-    snip('sk([^k ])', '- <>', { cap(1) }, math, 100, { wordTrig = false }),
+    snip('mak', 'plus.minus ', {}, math),
     snip('oak', 'plus.circle ', {}, math),
     snip('bak', 'plus.square ', {}, math),
-    snip('mak', 'plus.minus ', {}, math),
+    snip('osk', 'minus.circle ', {}, math),
+    snip('bsk', 'minus.square ', {}, math),
     snip('xx', 'times ', {}, math),
     snip('oxx', 'times.circle ', {}, math),
     snip('bxx', 'times.square ', {}, math),
