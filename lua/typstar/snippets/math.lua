@@ -36,12 +36,12 @@ return {
 
     -- operators
     snip('mak', 'plus.minus ', {}, math),
-    snip('oak', 'plus.circle ', {}, math),
+    snip('oak', 'plus.o ', {}, math),
     snip('bak', 'plus.square ', {}, math),
-    snip('osk', 'minus.circle ', {}, math),
+    snip('osk', 'minus.o ', {}, math),
     snip('bsk', 'minus.square ', {}, math),
     snip('xx', 'times ', {}, math),
-    snip('oxx', 'times.circle ', {}, math),
+    snip('oxx', 'times.o ', {}, math),
     snip('bxx', 'times.square ', {}, math),
     snip('ff', '(<>) / (<>) <>', { i(1, 'a'), i(2, 'b'), i(3) }, math),
 
@@ -78,7 +78,7 @@ return {
     snip('iso', 'tilde.equiv ', {}, math),
     snip('nab', 'nabla ', {}, math),
     snip('ep', 'exp(<>) ', { i(1, '1') }, math),
-    snip('cc', 'cases(\n\t<>\n)\\', { i(1, '1') }, math),
+    snip('ccs', 'cases(\n\t<>,\n)', { i(1, '1') }, math),
     snip('([A-Za-z])o([A-Za-z0-9]) ', '<>(<>) ', { cap(1), cap(2) }, math, 100, {
         maxTrigLength = 4,
         blacklist = { 'bot ', 'cos ', 'cot ', 'dot ', 'log ', 'mod ', 'not ', 'top ', 'won ', 'xor ' },
@@ -88,8 +88,8 @@ return {
     -- derivatives
     snip('dx', 'dif / (dif <>) ', { i(1, 'x') }, math),
     snip('ddx', '(dif <>) / (dif <>) ', { i(1, 'f'), i(2, 'x') }, math),
-    snip('DX', 'diff / (diff <>) ', { i(1, 'x') }, math),
-    snip('DDX', '(diff <>) / (diff <>) ', { i(1, 'f'), i(2, 'x') }, math),
+    snip('DX', 'partial / (partial <>) ', { i(1, 'x') }, math),
+    snip('DDX', '(partial <>) / (partial <>) ', { i(1, 'f'), i(2, 'x') }, math),
     snip('part', 'partial ', {}, math, 1600),
 
     -- integrals
