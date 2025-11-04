@@ -28,7 +28,7 @@ local operations = { -- first boolean: existing brackets should be kept; second 
     { 'sQ', '[', ']', false, false }, -- replace with square brackets
     { 'BB', '', '', false, false }, -- remove brackets
     { 'ss', '"', '"', false, false },
-    { 'agl', 'lr(angle.l ', ' angle.r)', false, false },
+    { 'chv', 'lr(chevron.l ', ' chevron.r)', false, false },
     { 'abs', 'abs', '', true, true },
     { 'ul', 'underline', '', true, true },
     { 'ol', 'overline', '', true, true },
@@ -37,9 +37,11 @@ local operations = { -- first boolean: existing brackets should be kept; second 
     { 'ht', 'hat', '', true, true },
     { 'br', 'macron', '', true, true },
     { 'dt', 'dot', '', true, true },
+    { 'dia', 'diaer', '', true, true },
     { 'ci', 'circle', '', true, true },
     { 'td', 'tilde', '', true, true },
     { 'nr', 'norm', '', true, true },
+    { 'arr', 'arrow', '', true, true },
     { 'vv', 'vec', '', true, true },
     { 'rt', 'sqrt', '', true, true },
     { 'flo', 'floor', '', true, true },
