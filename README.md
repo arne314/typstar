@@ -156,6 +156,7 @@ require('typstar').setup({ -- depending on your neovim plugin system
 </details>
 
 ### Snippets
+0. The snippets are designed to work with Typst `0.14`. For older versions check out the legacy `typst-0.13` branch.
 1. Install [LuaSnip](https://github.com/L3MON4D3/LuaSnip/), set `enable_autosnippets = true` and set a visual mode selection key (e.g. `store_selection_keys = '<Tab>'`) in the configuration
 2. Install [jsregexp](https://github.com/kmarius/jsregexp) as described [here](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#transformations) (You will see a warning on startup if jsregexp isn't installed properly)
 3. Install [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) and run `:TSInstall typst`
@@ -175,7 +176,6 @@ require('typstar').setup({ -- depending on your neovim plugin system
 4. See comment 4 above at Excalidraw
 
 ### Anki
-0. Typst version `0.12.0` or higher is required
 1. Install [Anki](https://apps.ankiweb.net/#download)
 2. Install [Anki-Connect](https://ankiweb.net/shared/info/2055492159) and make sure `http://localhost` is added to `webCorsOriginList` in the Add-on config (should be added by default)
 3. Install the typstar python package (I recommend using [pipx](https://github.com/pypa/pipx) via `pipx install git+https://github.com/arne314/typstar`, you will need to have python build tools and clang installed) \[Note: this may take a while\]
