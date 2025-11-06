@@ -1,6 +1,7 @@
 local M = {}
 local cfg = require('typstar.config').config.snippets
 local luasnip = require('luasnip')
+local events = require("luasnip.util.events")
 local utils = require('typstar.utils')
 local fmta = require('luasnip.extras.fmt').fmta
 local lsengines = require('luasnip.nodes.util.trig_engines')
@@ -36,15 +37,36 @@ function M.snip(trigger, expand, insert, condition, priority, options)
         blacklist = {},
         prepend = nil,
         indentCaptureIdx = nil,
+        callback = function()
+            vim.notify("hello")
+        end
     }, options or {})
     if options.prepend ~= nil or options.indentCaptureIdx ~= nil then
         expand, insert = M.blocktransform(expand, insert, options.prepend, options.indentCaptureIdx)
     end
+
+    local thisCallbacks = options.callbacks and {
+        [-1] = {
+            [events.pre_expand] = options.callbacks.pre and function(snippet, event_args)
+                options.callbacks.pre()
+            end or function(snippet, event_args)
+                print("pre-expand")
+            end,
+            [events.leave] = options.callbacks.post and function(snippet, event_args)
+                options.callbacks.post()
+            end or function(snippet, event_args)
+                print("Post-Expand")
+            end,
+        },
+    } or {}
+
     return luasnip.snippet(
         {
             trig = trigger,
             trigEngine = M.engine,
-            trigEngineOpts = vim.tbl_deep_extend('keep', { condition = condition }, options),
+            trigEngineOpts = vim.tbl_deep_extend('keep', {
+                condition = condition,
+            }, options),
             wordTrig = false,
             priority = priority,
             snippetType = 'autosnippet',
@@ -52,6 +74,7 @@ function M.snip(trigger, expand, insert, condition, priority, options)
         fmta(expand, { unpack(insert) }),
         {
             condition = function() return M.snippets_toggle end,
+            callbacks = thisCallbacks
         }
     )
 end
@@ -130,7 +153,7 @@ function M.engine(trigger, opts)
 
         -- blacklist
         for _, w in ipairs(opts.blacklist) do
-            if line_full:sub(-#w) == w then return nil end
+            if line_full:sub(- #w) == w then return nil end
         end
         return whole, captures
     end
