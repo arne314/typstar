@@ -119,4 +119,70 @@ return {
         nil,
         { maxTrigLength = 25 }
     ),
+
+
+    helper.start_snip_in_newl('equ', '\\ <> & <>', { i(1, "="), helper.visual(2) }, math,
+        nil,
+        {
+            wordTrig = false,
+            callbacks = {
+                pre = function()
+                    local cursor = vim.api.nvim_win_get_cursor(0)
+                    local row = cursor[1] -1 
+
+                    local thisrow = row
+                    local equalsFound
+                    local lastNonWhiteSpace
+
+                    while thisrow >= 1 do
+                        local thisline = vim.api.nvim_buf_get_lines(0, thisrow, thisrow+1, false)[1]
+                        print(thisline)
+                        if not thisline then
+                            thisrow = thisrow - 1
+                            goto continue
+                        end
+                        for i = #thisline, 1, -1 do
+                            local thisValue = thisline:sub(i, i)
+                            if thisValue == '&' then
+                                print("found ampersand")
+                                return
+                            end
+                            if thisValue == '\\' or thisValue == '$' then
+                                print("found dollar/newline")
+                                goto breky
+                            end
+                            if not equalsFound and thisValue == '=' then
+                                print("found equals")
+                                equalsFound = { thisrow, i }
+                            elseif thisValue ~= ' ' then
+                                lastNonWhiteSpace = { thisrow, i }
+                            end
+                        end
+                        thisrow = thisrow - 1
+                        ::continue::
+                    end
+                    ::breky::
+
+                    local column
+                    if equalsFound then
+                        row = equalsFound[1]
+                        column = equalsFound[2]
+                    else
+                        row = lastNonWhiteSpace[1]
+                        column = lastNonWhiteSpace[2]
+                    end
+
+                    local thisline = vim.api.nvim_buf_get_lines(0, row, row + 1, false)[1]
+                    print("trying to replace this:")
+                    print(thisline)
+                    thisline = thisline:sub(1, column - 1) ..
+                        "& " ..
+                        thisline:sub(column)
+                    print("with:")
+                    print(thisline)
+                    vim.api.nvim_buf_set_lines(0, row, row + 1, false, { thisline })
+                end
+            }
+        }),
+
 }

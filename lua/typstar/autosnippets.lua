@@ -90,16 +90,16 @@ function M.blocktransform(expand, insert, prepend, indent_capture_idx)
 end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority, options)
-    local line = (not options or options.transform == nil) and M.cap(1)
-        or M.cap(1, options.transform)
+    -- local line = (not options or options.transform == nil) and M.cap(1)
+    --     or M.cap(1, options.transform)
     return M.snip(
-    -- '([^\\s]\\s+)' .. trigger, -- old trigger which does not capture whole line
-        '(.*\\S)\\s+' .. trigger,
+        '([^\\s]\\s+)' .. trigger, -- old trigger which does not capture whole line
+        -- '(.*\\S)\\s+' .. trigger, -- captures whole line
         '<>\n' .. expand,
-        { line, unpack(insert) },
+        { M.cap(1), unpack(insert) },
         condition,
         priority,
-        vim.tbl_deep_extend('force', { indentCaptureIdx = 1  }, options or {})
+        options
     )
 end
 
