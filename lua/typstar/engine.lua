@@ -37,28 +37,22 @@ function M.snip(trigger, expand, insert, condition, priority, options)
         blacklist = {},
         prepend = nil,
         indentCaptureIdx = nil,
-        callback = function()
-            vim.notify("hello")
-        end
     }, options or {})
     if options.prepend ~= nil or options.indentCaptureIdx ~= nil then
         expand, insert = M.blocktransform(expand, insert, options.prepend, options.indentCaptureIdx)
     end
 
-    local thisCallbacks = options.callbacks and {
+    local callbacks = options.callbacks and {
         [-1] = {
             [events.pre_expand] = options.callbacks.pre and function(snippet, event_args)
-                options.callbacks.pre()
-            end or function(snippet, event_args)
-                print("pre-expand")
-            end,
+                options.callbacks.pre(snippet, event_args)
+            end or {},
             [events.leave] = options.callbacks.post and function(snippet, event_args)
-                options.callbacks.post()
-            end or function(snippet, event_args)
-                print("Post-Expand")
-            end,
+                options.callbacks.post(snippet, event_args)
+            end or {},
         },
     } or {}
+    options = vim.tbl_deep_extend('keep', { callbacks = nil }, options or {})
 
     return luasnip.snippet(
         {
@@ -74,7 +68,7 @@ function M.snip(trigger, expand, insert, condition, priority, options)
         fmta(expand, { unpack(insert) }),
         {
             condition = function() return M.snippets_toggle end,
-            callbacks = thisCallbacks
+            callbacks = callbacks
         }
     )
 end
