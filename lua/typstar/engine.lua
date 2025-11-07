@@ -1,6 +1,7 @@
 local M = {}
 local cfg = require('typstar.config').config.snippets
 local luasnip = require('luasnip')
+local events = require("luasnip.util.events")
 local utils = require('typstar.utils')
 local fmta = require('luasnip.extras.fmt').fmta
 local lsengines = require('luasnip.nodes.util.trig_engines')
@@ -40,11 +41,26 @@ function M.snip(trigger, expand, insert, condition, priority, options)
     if options.prepend ~= nil or options.indentCaptureIdx ~= nil then
         expand, insert = M.blocktransform(expand, insert, options.prepend, options.indentCaptureIdx)
     end
+
+    local callbacks = options.callbacks and {
+        [-1] = {
+            [events.pre_expand] = options.callbacks.pre and function(snippet, event_args)
+                options.callbacks.pre(snippet, event_args)
+            end or nil,
+            [events.leave] = options.callbacks.post and function(snippet, event_args)
+                options.callbacks.post(snippet, event_args)
+            end or nil,
+        },
+    } or {}
+    options = vim.tbl_deep_extend('keep', { callbacks = nil }, options or {})
+
     return luasnip.snippet(
         {
             trig = trigger,
             trigEngine = M.engine,
-            trigEngineOpts = vim.tbl_deep_extend('keep', { condition = condition }, options),
+            trigEngineOpts = vim.tbl_deep_extend('keep', {
+                condition = condition,
+            }, options),
             wordTrig = false,
             priority = priority,
             snippetType = 'autosnippet',
@@ -52,6 +68,7 @@ function M.snip(trigger, expand, insert, condition, priority, options)
         fmta(expand, { unpack(insert) }),
         {
             condition = function() return M.snippets_toggle end,
+            callbacks = callbacks
         }
     )
 end
@@ -130,7 +147,7 @@ function M.engine(trigger, opts)
 
         -- blacklist
         for _, w in ipairs(opts.blacklist) do
-            if line_full:sub(-#w) == w then return nil end
+            if line_full:sub(- #w) == w then return nil end
         end
         return whole, captures
     end
