@@ -62,8 +62,8 @@ def cmd(
     reimport: Annotated[
         bool,
         typer.Option(
-            help="Instead of throwing an error also add flashcards that have already been asigned an id "
-            "but are not present in Anki. The asigned id will be updated."
+            help="Instead of throwing an error, also add flashcards that have already been assigned an id "
+            "but are not present in Anki. The assigned id will be updated in the source code."
         ),
     ] = False,
     typst_cmd: Annotated[
