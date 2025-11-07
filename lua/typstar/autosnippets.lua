@@ -101,7 +101,7 @@ function M.start_snip_in_newl(trigger, expand, insert, condition, priority, opti
         line = M.cap(1)
     else
         -- capture whole line if line needs to be manipulated
-        trigger = '(.*\\S)\\s+' .. trigger
+        trigger = '(.[^\\s])\\s+' .. trigger
         line = M.cap(1, options.transform)
         options = vim.tbl_deep_extend('keep', { indentCaptureIdx = 1 }, options or {})
     end
