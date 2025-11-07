@@ -46,10 +46,10 @@ function M.snip(trigger, expand, insert, condition, priority, options)
         [-1] = {
             [events.pre_expand] = options.callbacks.pre and function(snippet, event_args)
                 options.callbacks.pre(snippet, event_args)
-            end or {},
+            end or nil,
             [events.leave] = options.callbacks.post and function(snippet, event_args)
                 options.callbacks.post(snippet, event_args)
-            end or {},
+            end or nil,
         },
     } or {}
     options = vim.tbl_deep_extend('keep', { callbacks = nil }, options or {})
