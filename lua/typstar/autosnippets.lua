@@ -90,13 +90,25 @@ function M.blocktransform(expand, insert, prepend, indent_capture_idx)
 end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority, options)
-    -- local line = (not options or options.transform == nil) and M.cap(1)
-    --     or M.cap(1, options.transform)
+    local line
+    if options and options.transform and (not options.callbacks and
+            not options.callbacks.pre) then
+        -- capture only trigger if no transform given
+        -- the reason for this is that a pre-snippet callback function
+        -- intended to be used for e.g. a multi-line transform not seeing
+        -- the line that triggered the snippet is not intended behavior.
+        trigger = '([^\\s]\\s+)' .. trigger
+        line = M.cap(1)
+    else
+        -- capture whole line if line needs to be manipulated
+        trigger = '(.*\\S)\\s+' .. trigger
+        line = M.cap(1, options.transform)
+        options = vim.tbl_deep_extend('keep', { indentCaptureIdx = 1 }, options or {})
+    end
     return M.snip(
-        '([^\\s]\\s+)' .. trigger, -- old trigger which does not capture whole line
-        -- '(.*\\S)\\s+' .. trigger, -- captures whole line
+        trigger,
         '<>\n' .. expand,
-        { M.cap(1), unpack(insert) },
+        { line, unpack(insert) },
         condition,
         priority,
         options
