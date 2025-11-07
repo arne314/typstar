@@ -91,8 +91,8 @@ end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority, options)
     local line
-    if options and options.transform and (not options.callbacks and
-            not options.callbacks.pre) then
+    if not options or not options.transform or (options.callbacks and
+            options.callbacks.pre) then
         -- capture only trigger if no transform given
         -- the reason for this is that a pre-snippet callback function
         -- intended to be used for e.g. a multi-line transform not seeing
