@@ -97,11 +97,11 @@ function M.start_snip_in_newl(trigger, expand, insert, condition, priority, opti
         -- the reason for this is that a pre-snippet callback function
         -- intended to be used for e.g. a multi-line transform not seeing
         -- the line that triggered the snippet is not intended behavior.
-        trigger = '([^\\s]\\s+)' .. trigger
+        trigger = '([^\\s])\\s+' .. trigger
         line = M.cap(1)
     else
         -- capture whole line if line needs to be manipulated
-        trigger = '(.[^\\s])\\s+' .. trigger
+        trigger = '(.*[^\\s])\\s+' .. trigger
         line = M.cap(1, options.transform)
         options = vim.tbl_deep_extend('keep', { indentCaptureIdx = 1 }, options or {})
     end
