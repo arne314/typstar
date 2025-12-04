@@ -91,20 +91,17 @@ end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority, options)
     local line
-    if not options or not options.transform or (options.callbacks and
-            options.callbacks.pre) then
-        -- capture only trigger if no transform given
-        -- the reason for this is that a pre-snippet callback function
-        -- intended to be used for e.g. a multi-line transform not seeing
-        -- the line that triggered the snippet is not intended behavior.
-        trigger = '([^\\s])\\s+' .. trigger
-        line = M.cap(1)
-    else
-        -- capture whole line if line needs to be manipulated
+    -- NOTE: transform function option makes the snippet consume the whole line
+    -- at snippet execution
+    if options and options.transform then
         trigger = '(.*[^\\s])\\s+' .. trigger
         line = M.cap(1, options.transform)
         options = vim.tbl_deep_extend('keep', { indentCaptureIdx = 1 }, options or {})
+    else
+        trigger = '([^\\s])\\s+' .. trigger
+        line = M.cap(1)
     end
+
     return M.snip(
         trigger,
         '<>\n' .. expand,
