@@ -37,6 +37,10 @@ function M.snip(trigger, expand, insert, condition, priority, options)
         blacklist = {},
         prepend = nil,
         indentCaptureIdx = nil,
+        callbacks = {
+            pre = nil,
+            post = nil
+        }
     }, options or {})
     if options.prepend ~= nil or options.indentCaptureIdx ~= nil then
         expand, insert = M.blocktransform(expand, insert, options.prepend, options.indentCaptureIdx)
@@ -44,8 +48,8 @@ function M.snip(trigger, expand, insert, condition, priority, options)
 
     local callbacks = options.callbacks and {
         [-1] = {
-            [events.pre_expand] = options.callbacks.pre and options.callbacks.pre or nil,
-            [events.leave] = options.callbacks.post and options.callbacks.post or nil,
+            [events.pre_expand] = options.callbacks.pre,
+            [events.leave] = options.callbacks.post
         },
     } or {}
     options = vim.tbl_deep_extend('keep', { callbacks = nil }, options or {})
