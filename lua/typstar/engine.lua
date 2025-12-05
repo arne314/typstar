@@ -1,6 +1,7 @@
 local M = {}
 local cfg = require('typstar.config').config.snippets
 local luasnip = require('luasnip')
+local events = require("luasnip.util.events")
 local utils = require('typstar.utils')
 local fmta = require('luasnip.extras.fmt').fmta
 local lsengines = require('luasnip.nodes.util.trig_engines')
@@ -40,11 +41,31 @@ function M.snip(trigger, expand, insert, condition, priority, options)
     if options.prepend ~= nil or options.indentCaptureIdx ~= nil then
         expand, insert = M.blocktransform(expand, insert, options.prepend, options.indentCaptureIdx)
     end
+
+    local callbacks = {}
+    if options and options.callbacks then
+        for k, v in pairs(options.callbacks) do
+            -- event.pre_expand and post_expand only for callbacks[-1] ? 
+            if v.pre then
+                callbacks[k] = {
+                    [events.enter] = options.callbacks[k].pre
+                }
+            elseif v.post then
+                callbacks[k] = {
+                    [events.leave] = options.callbacks[k].post
+                }
+            end
+        end
+    end
+    options.callbacks = nil
+
     return luasnip.snippet(
         {
             trig = trigger,
             trigEngine = M.engine,
-            trigEngineOpts = vim.tbl_deep_extend('keep', { condition = condition }, options),
+            trigEngineOpts = vim.tbl_deep_extend('keep', {
+                condition = condition,
+            }, options),
             wordTrig = false,
             priority = priority,
             snippetType = 'autosnippet',
@@ -52,6 +73,7 @@ function M.snip(trigger, expand, insert, condition, priority, options)
         fmta(expand, { unpack(insert) }),
         {
             condition = function() return M.snippets_toggle end,
+            callbacks = callbacks
         }
     )
 end
@@ -130,7 +152,7 @@ function M.engine(trigger, opts)
 
         -- blacklist
         for _, w in ipairs(opts.blacklist) do
-            if line_full:sub(-#w) == w then return nil end
+            if line_full:sub(- #w) == w then return nil end
         end
         return whole, captures
     end

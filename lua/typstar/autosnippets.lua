@@ -1,8 +1,15 @@
 local M = require('typstar.engine') -- inherit all functions
 local luasnip = require('luasnip')
 
-function M.cap(i)
-    return luasnip.function_node(function(_, snip) return snip.captures[i] end)
+function M.cap(i, transform_fn)
+    local node = luasnip.function_node(function(_, snip)
+        local result = snip.captures[i]
+        if transform_fn then
+            result = transform_fn(result)
+        end
+        return result
+    end)
+    return node
 end
 
 local compute_leading_white_spaces = function(snip, i)
@@ -83,10 +90,25 @@ function M.blocktransform(expand, insert, prepend, indent_capture_idx)
 end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority, options)
+    local line
+    -- NOTE: transform function option makes the snippet consume the whole line
+    -- at snippet execution
+    if options and options.transform then
+        trigger = '(.*\\S)\\s+' .. trigger
+        line = M.cap(1, options.transform)
+        options = vim.tbl_deep_extend('force', {
+            indentCaptureIdx = 1,
+        }, options or {})
+        options.transform = nil
+    else
+        trigger = '(\\S)\\s+' .. trigger
+        line = M.cap(1)
+    end
+
     return M.snip(
-        '([^\\s]\\s+)' .. trigger,
+        trigger,
         '<>\n' .. expand,
-        { M.cap(1), unpack(insert) },
+        { line, unpack(insert) },
         condition,
         priority,
         options
@@ -103,4 +125,5 @@ function M.list_snip(trigger, expand, insert, condition, priority, options)
         vim.tbl_deep_extend('keep', { indentCaptureIdx = 1 }, options or {})
     )
 end
+
 return M
