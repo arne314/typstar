@@ -94,11 +94,14 @@ function M.start_snip_in_newl(trigger, expand, insert, condition, priority, opti
     -- NOTE: transform function option makes the snippet consume the whole line
     -- at snippet execution
     if options and options.transform then
-        trigger = '(.*[^\\s])\\s+' .. trigger
+        trigger = '(.*\\S)\\s+' .. trigger
         line = M.cap(1, options.transform)
-        options = vim.tbl_deep_extend('keep', { indentCaptureIdx = 1 }, options or {})
+        options = vim.tbl_deep_extend('force', {
+            indentCaptureIdx = 1,
+        }, options or {})
+        options.transform = nil
     else
-        trigger = '([^\\s])\\s+' .. trigger
+        trigger = '(\\S)\\s+' .. trigger
         line = M.cap(1)
     end
 
@@ -114,7 +117,7 @@ end
 
 function M.list_snip(trigger, expand, insert, condition, priority, options)
     return M.snip(
-        '(^\\s*(-|\\+|\\d+\\.)\\s+.*\\s+)' .. trigger,
+        '(\\S*(-|\\+|\\d+\\.)\\s+.*\\s+)' .. trigger,
         '<>' .. expand,
         { M.cap(1), unpack(insert) },
         condition,
