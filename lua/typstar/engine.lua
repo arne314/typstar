@@ -37,10 +37,6 @@ function M.snip(trigger, expand, insert, condition, priority, options)
         blacklist = {},
         prepend = nil,
         indentCaptureIdx = nil,
-        -- callbacks = {
-        --     pre = nil,
-        --     post = nil
-        -- }
     }, options or {})
     if options.prepend ~= nil or options.indentCaptureIdx ~= nil then
         expand, insert = M.blocktransform(expand, insert, options.prepend, options.indentCaptureIdx)
