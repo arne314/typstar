@@ -117,7 +117,7 @@ end
 
 function M.list_snip(trigger, expand, insert, condition, priority, options)
     return M.snip(
-        '(\\S*(-|\\+|\\d+\\.)\\s+.*\\s+)' .. trigger,
+        '(^\\s*(-|\\+|\\d+\\.)\\s+.*\\s+)' .. trigger,
         '<>' .. expand,
         { M.cap(1), unpack(insert) },
         condition,
