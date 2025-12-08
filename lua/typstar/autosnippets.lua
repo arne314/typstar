@@ -2,14 +2,11 @@ local M = require('typstar.engine') -- inherit all functions
 local luasnip = require('luasnip')
 
 function M.cap(i, transform_fn)
-    local node = luasnip.function_node(function(_, snip)
+    return luasnip.function_node(function(_, snip)
         local result = snip.captures[i]
-        if transform_fn then
-            result = transform_fn(result)
-        end
+        if transform_fn then result = transform_fn(result) end
         return result
     end)
-    return node
 end
 
 local compute_leading_white_spaces = function(snip, i)
@@ -105,14 +102,7 @@ function M.start_snip_in_newl(trigger, expand, insert, condition, priority, opti
         line = M.cap(1)
     end
 
-    return M.snip(
-        trigger,
-        '<>\n' .. expand,
-        { line, unpack(insert) },
-        condition,
-        priority,
-        options
-    )
+    return M.snip(trigger, '<>\n' .. expand, { line, unpack(insert) }, condition, priority, options)
 end
 
 function M.list_snip(trigger, expand, insert, condition, priority, options)
