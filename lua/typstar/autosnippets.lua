@@ -88,15 +88,15 @@ end
 
 function M.start_snip_in_newl(trigger, expand, insert, condition, priority, options)
     local line
-    -- NOTE: transform function option makes the snippet consume the whole line
+    -- NOTE: line_transform function option makes the snippet consume the whole line
     -- at snippet execution
-    if options and options.transform then
+    if options and options.line_transform then
         trigger = '(.*\\S)\\s+' .. trigger
-        line = M.cap(1, options.transform)
+        line = M.cap(1, options.line_transform)
         options = vim.tbl_deep_extend('force', {
             indentCaptureIdx = 1,
         }, options or {})
-        options.transform = nil
+        options.line_transform = nil
     else
         trigger = '(\\S)\\s+' .. trigger
         line = M.cap(1)
