@@ -1,5 +1,5 @@
 {
-  description = "typstar nix flake for development";
+  description = "typstar nix flake for development and testing";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -17,67 +17,72 @@
       systems = [
         "x86_64-linux"
         "x86_64-darwin"
+        "aarch64-linux"
         "aarch64-darwin"
       ];
 
       perSystem =
-        { system, ... }:
+        { pkgs, system, ... }:
         let
-          pkgs = import nixpkgs { inherit system; };
-          typstar = pkgs.vimUtils.buildVimPlugin {
+          pluginDeps = with pkgs.vimPlugins; [
+            luasnip
+            nvim-treesitter-parsers.typst
+          ];
+          typstarPlugin = pkgs.vimUtils.buildVimPlugin {
             name = "typstar";
             src = self;
-            buildInputs = [
-              pkgs.vimPlugins.luasnip
-              pkgs.vimPlugins.nvim-treesitter-parsers.typst
-            ];
+            buildInputs = pluginDeps;
           };
+          nvimBuild =
+            extraPlugins:
+            let
+              config = pkgs.neovimUtils.makeNeovimConfig {
+                customRC = ''
+                  lua << EOF
+                  print("Welcome to Typstar! This is just a demo.")
+                  ${builtins.readFile ./tests/basic_init.lua}
+                  EOF
+                '';
+                plugins =
+                  with pkgs.vimPlugins;
+                  [
+                    mini-nvim
+                  ]
+                  ++ pluginDeps
+                  ++ extraPlugins;
+              };
+            in
+            pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped config;
+          nvimFullBuild = nvimBuild [ typstarPlugin ];
+          nvimDevBuild = nvimBuild [ ];
         in
         {
+          checks.default =
+            pkgs.runCommand "typstar-plugin-tests"
+              {
+                buildInputs = [ nvimFullBuild ];
+                src = ./.;
+              }
+              ''
+                export HOME=$out/home
+                mkdir -p $HOME
+                cd $src
+                nvim --headless -c "lua MiniTest.run()"
+              '';
+          devShells.default = pkgs.mkShell {
+            packages = [
+              nvimDevBuild
+              pkgs.uv
+            ];
+            shellHook = # Bash
+              ''
+                uv sync --locked
+                export NVIM_PLUGIN_DEV=$(pwd)
+              '';
+          };
           packages = {
-            default = typstar;
-            nvim =
-              let
-                config = pkgs.neovimUtils.makeNeovimConfig {
-                  customRC = ''
-                    lua << EOF
-                    print("Welcome to Typstar! This is just a demo.")
-
-                    vim.g.mapleader = " "
-
-                    require('nvim-treesitter.configs').setup {
-                      highlight = { enable = true },
-                    }
-
-                    local ls = require('luasnip')
-                    ls.config.set_config({
-                      enable_autosnippets = true,
-                      store_selection_keys = "<Tab>",
-                    })
-
-                    local typstar = require('typstar')
-                    typstar.setup({})
-
-                    vim.keymap.set({'n', 'i'}, '<M-t>', '<Cmd>TypstarToggleSnippets<CR>', { silent = true, noremap = true })
-                    vim.keymap.set({'s', 'i'}, '<M-j>', '<Cmd>TypstarSmartJump<CR>', { silent = true, noremap = true })
-                    vim.keymap.set({'s', 'i'}, '<M-k>', '<Cmd>TypstarSmartJumpBack<CR>', { silent = true, noremap = true })
-
-                    vim.keymap.set('n', '<leader>e', '<Cmd>TypstarInsertExcalidraw<CR>', { silent = true, noremap = true })
-                    vim.keymap.set('n', '<leader>r', '<Cmd>TypstarInsertRnote<CR>', { silent = true, noremap = true })
-                    vim.keymap.set('n', '<leader>o', '<Cmd>TypstarOpenDrawing<CR>', { silent = true, noremap = true })
-
-                    vim.keymap.set('n', '<leader>a', '<Cmd>TypstarAnkiScan<CR>', { silent = true, noremap = true })
-                    EOF
-                  '';
-                  plugins = [
-                    typstar
-                    pkgs.vimPlugins.luasnip
-                    pkgs.vimPlugins.nvim-treesitter
-                    pkgs.vimPlugins.nvim-treesitter-parsers.typst
-                  ];
-                };
-              in
-              pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped config;
+            default = typstarPlugin;
+            nvim = nvimFullBuild;
           };
         };
     };

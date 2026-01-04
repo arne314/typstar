@@ -3,5 +3,8 @@
 
 .obsidian
 assets
+
 result
+*.pdf
+test.typ
 

@@ -87,7 +87,8 @@ present in Anki
 
 
 ## Installation
-Install the plugin in Neovim (see [Nix instructions](#in-a-nix-flake-optional)) and run the plugin setup.
+Install the plugin in Neovim and run the plugin setup.
+You can install and run a demo installation using [Nix](#in-a-nix-flake-optional)).
 ```lua
 require('typstar').setup({ -- depending on your neovim plugin system
    -- your typstar config goes here
@@ -182,6 +183,8 @@ require('typstar').setup({ -- depending on your neovim plugin system
 4. Make sure the `typstar-anki` command is available in your `PATH` or modify the `typstarAnkiCmd` option in the [config](#configuration)
 
 ### In a Nix Flake (optional)
+To try a minimal demo setup, run `nix run .#nvim -- samplefile.typ`. The keybidings are defined [here](./tests/test_simple.lua)
+
 You can add typstar to your `nix-flake` like so
 ```nix
 # `flake.nix`
@@ -200,9 +203,9 @@ with pkgs; [
   (pkgs.vimUtils.buildVimPlugin {
      name = "typstar";
      src = inputs.typstar; 
-     buildInputs = [
-        vimPlugins.luasnip 
-        vimPlugins.nvim-treesitter-parsers.typst
+     buildInputs = with pkgs.vimPlugins; [
+        luasnip
+        nvim-treesitter-parsers.typst
      ];
   })
 ]

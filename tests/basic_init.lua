@@ -1,6 +1,9 @@
 -- setup mini test environment
 require('mini.test').setup()
 
+-- properly source plugin when in dev shell
+vim.opt.rtp:prepend(os.getenv('NVIM_PLUGIN_DEV') or '')
+
 -- basic typstar setup
 local ls = require('luasnip')
 ls.config.set_config({
