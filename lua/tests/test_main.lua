@@ -3,10 +3,11 @@ local new_set = MiniTest.new_set
 local expect, eq = MiniTest.expect, MiniTest.expect.equality
 
 local child = MiniTest.new_child_neovim()
+child.start({}, { nvim_executable = './lua/tests/nvim_wrapper.sh' })
 
 local T = new_set({
     hooks = {
-        pre_case = function() child.restart({ '-u', 'tests/init.lua' }) end,
+        pre_case = child.restart(),
         post_once = child.stop,
     },
 })

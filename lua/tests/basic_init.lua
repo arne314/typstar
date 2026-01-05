@@ -1,5 +1,9 @@
 -- setup mini test environment
-require('mini.test').setup()
+require('mini.test').setup({
+    collect = {
+        find_files = function() return { 'lua/tests/test_main.lua' } end,
+    },
+})
 
 -- properly source plugin when in dev shell
 vim.opt.rtp:prepend(os.getenv('NVIM_PLUGIN_DEV') or '')

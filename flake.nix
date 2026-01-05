@@ -37,12 +37,13 @@
             extraPlugins:
             let
               config = pkgs.neovimUtils.makeNeovimConfig {
-                customRC = ''
-                  lua << EOF
-                  print("Welcome to Typstar! This is just a demo.")
-                  ${builtins.readFile ./tests/basic_init.lua}
-                  EOF
-                '';
+                customRC = # Lua
+                  ''
+                    lua << EOF
+                    print("Welcome to Typstar! This is just a demo.")
+                    ${builtins.readFile ./lua/tests/basic_init.lua}
+                    EOF
+                  '';
                 plugins =
                   with pkgs.vimPlugins;
                   [
@@ -60,7 +61,10 @@
           checks.default =
             pkgs.runCommand "typstar-plugin-tests"
               {
-                buildInputs = [ nvimFullBuild ];
+                buildInputs = [
+                  nvimFullBuild
+                  pkgs.which
+                ];
                 src = ./.;
               }
               ''

@@ -183,7 +183,7 @@ require('typstar').setup({ -- depending on your neovim plugin system
 4. Make sure the `typstar-anki` command is available in your `PATH` or modify the `typstarAnkiCmd` option in the [config](#configuration)
 
 ### In a Nix Flake (optional)
-To try a minimal demo setup, run `nix run .#nvim -- samplefile.typ`. The keybidings are defined [here](./tests/test_simple.lua)
+To try a minimal demo setup, run `nix run .#nvim -- samplefile.typ`. The keybidings are defined [here](./lua/tests/basic_init.lua)
 
 You can add typstar to your `nix-flake` like so
 ```nix
