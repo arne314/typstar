@@ -33,6 +33,18 @@
             src = self;
             buildInputs = pluginDeps;
           };
+          repeatStubPlugin = pkgs.vimUtils.buildVimPlugin {
+            name = "repeat-stub";
+            src =
+              pkgs.writeTextDir "autoload/repeat.vim" # Vim
+                ''
+                  if exists('*repeat#set')
+                    finish
+                  endif
+                  function! repeat#set(...) abort
+                  endfunction
+                '';
+          };
           nvimBuild =
             extraPlugins:
             let
@@ -48,6 +60,7 @@
                   with pkgs.vimPlugins;
                   [
                     mini-nvim
+                    repeatStubPlugin
                   ]
                   ++ pluginDeps
                   ++ extraPlugins;
