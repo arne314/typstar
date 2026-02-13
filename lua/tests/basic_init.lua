@@ -1,7 +1,11 @@
 -- setup mini test environment
 require('mini.test').setup({
     collect = {
-        find_files = function() return { 'lua/tests/test_main.lua' } end,
+        find_files = function()
+            local test_files = vim.fn.globpath('lua/tests', '**/test_*.lua', true, true)
+            local snippet_files = vim.fn.globpath('lua/tests/snippets', '*.lua', true, true)
+            return vim.list_extend(test_files, snippet_files)
+        end,
     },
 })
 

@@ -1,20 +1,16 @@
 MiniTest = require('mini.test')
-local new_set = MiniTest.new_set
 local expect, eq = MiniTest.expect, MiniTest.expect.equality
+local helper = require('tests.helper'):setup()
 
-local child = MiniTest.new_child_neovim()
-child.start({}, { nvim_executable = './lua/tests/nvim_wrapper.sh' })
-
-local T = new_set({
-    hooks = {
-        pre_case = child.restart(),
-        post_once = child.stop,
-    },
+return helper:add_cases('main', {
+    ['jsregexp'] = function()
+        local jsregexp_ok, _ = pcall(require, 'jsregexp')
+        eq(jsregexp_ok, true)
+    end,
+    ['toggle_snippets'] = function()
+        helper:test_snip('\\t:a\\t :a', ':a $a$ ')
+    end,
+    ['jump'] = function()
+        helper:test_snip_math('ff1\\j2\\b3\\j\\ja', '(3) / (2) a')
+    end,
 })
-
-T['jsregexp'] = function()
-    local jsregexp_ok, _ = pcall(require, 'jsregexp')
-    eq(jsregexp_ok, true)
-end
-
-return T
