@@ -90,6 +90,7 @@
             packages = [
               nvimDevBuild
               pkgs.uv
+              pkgs.just
             ];
             shellHook = # Bash
               ''
