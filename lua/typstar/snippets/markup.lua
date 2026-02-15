@@ -44,7 +44,7 @@ for _, val in pairs(wrappings) do
 end
 
 return {
-    start('dm', '$\n<>\n<>$', { indent_visual(1), cap(1) }, markup),
+    start('dm', '$\n<>\n<>$ <>', { indent_visual(1), cap(1), i(2) }, markup),
     helper.start_snip_in_newl('dm', '$\n\t<>\n$ <>', { helper.visual(1), i(2) }, markup, nil, { wordTrig = false }),
     helper.list_snip('dm', '\n$\n\t<>\n$ <>', { helper.visual(1), i(2) }, markup, 1100, { prepend = '\t' }),
     start('fla', '#flashcard(0)[<>][\n<>\n<>]', { i(1, 'flashcard'), indent_visual(2), cap(1) }, markup),
