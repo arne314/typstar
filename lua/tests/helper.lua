@@ -1,7 +1,7 @@
 local M = {}
 local MiniTest = require('mini.test')
-local expect, eq = MiniTest.expect, MiniTest.expect.equality
 
+M.eq = MiniTest.expect.equality
 M.truthy = MiniTest.new_expectation(
     'truthy',
     function(x) return x end,
@@ -37,10 +37,31 @@ function M:add_cases(name, cases)
     return self.test_set
 end
 
-function M:eval_snip(input, math)
-    if math then
+-- overwrite the child buffer and place the cursor at `\\C`
+function M:set_buffer(text)
+    local cursor_line = 0
+    local cursor_col = 0
+    local cursor_pos = text:find('\\C', 1, true)
+    if cursor_pos then
+        local before = text:sub(1, cursor_pos - 1)
+        local lines_before = vim.split(before, '\n', { plain = true })
+        cursor_line = #lines_before - 1
+        cursor_col = #lines_before[#lines_before]
+        text = text:sub(1, cursor_pos - 1) .. text:sub(cursor_pos + 2)
+    end
+    local lines = vim.split(text, '\n', { plain = true })
+    self.child.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+    self.child.api.nvim_win_set_cursor(0, { cursor_line + 1, cursor_col })
+end
+
+-- evaluate a snippet by typing it out, `\\j` and `\\b` jump and `\\t` toggles all snippets
+function M:eval_snip(input, mode)
+    if mode == 'math' then
         self.child.cmd('startinsert')
         self.child.type_keys('$$<ESC>')
+    elseif mode == 'code' then
+        self.child.cmd('startinsert')
+        self.child.type_keys('#{}<ESC>')
     end
     self.child.bo.filetype = 'typst'
     self.child.cmd('startinsert')
@@ -71,8 +92,19 @@ function M:eval_snip(input, math)
     return table.concat(self.child.api.nvim_buf_get_lines(0, 0, -1, true), '\n')
 end
 
-function M:test_snip(input, want) eq(self:eval_snip(input, false), want) end
+function M:test_snip(input, want)
+    local buf = self:eval_snip(input, 'markup')
+    M.eq(buf, want or input)
+end
 
-function M:test_snip_math(input, want) eq(self:eval_snip(input, true), '$' .. want .. '$') end
+function M:test_snip_math(input, want)
+    local buf = self:eval_snip(input, 'math')
+    M.eq(buf, '$' .. (want or input) .. '$')
+end
+
+function M:test_snip_code(input, want)
+    local buf = self:eval_snip(input, 'code')
+    M.eq(buf, '#{' .. (want or input) .. '}')
+end
 
 return M

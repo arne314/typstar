@@ -1,5 +1,3 @@
-MiniTest = require('mini.test')
-local expect, eq = MiniTest.expect, MiniTest.expect.equality
 local helper = require('tests.helper'):setup()
 
 helper:add_cases('letters', {
