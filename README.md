@@ -178,7 +178,7 @@ require('typstar').setup({ -- depending on your neovim plugin system
 ### Anki
 1. Install [Anki](https://apps.ankiweb.net/#download)
 2. Install [Anki-Connect](https://ankiweb.net/shared/info/2055492159) and make sure `http://localhost` is added to `webCorsOriginList` in the Add-on config (should be added by default)
-3. Install the typstar python package (I recommend using [pipx](https://github.com/pypa/pipx) via `pipx install git+https://github.com/arne314/typstar`, you will need to have python build tools and clang installed) \[Note: this may take a while\]
+3. Install the typstar python package (I recommend using [uv](https://docs.astral.sh/uv/) via `uv tool install git+https://github.com/arne314/typstar`, you will need to have python build tools and clang installed) \[Note: this may take a while\]
 4. Make sure the `typstar-anki` command is available in your `PATH` or modify the `typstarAnkiCmd` option in the [config](#configuration)
 
 ### In a Nix Flake (optional)
