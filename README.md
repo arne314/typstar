@@ -144,13 +144,14 @@ require('typstar').setup({ -- depending on your neovim plugin system
 {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    branch = "main",
     lazy = false,
     config = function()
-        local configs = require("nvim-treesitter.configs")
-        configs.setup({
-            ensure_installed = { "typst" },
-        })
-    end,
+        require 'nvim-treesitter'.install
+        {
+            "typst",
+        }
+    end
 },
 ```
 </details>
