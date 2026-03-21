@@ -22,11 +22,15 @@ vim.api.nvim_create_autocmd('TextChangedI', {
 
 M.in_math = function()
     local cursor = utils.get_cursor_pos()
-    return utils.cursor_within_treesitter_query(ts_math_query, 0, 0, cursor)
-        and not utils.cursor_within_treesitter_query(ts_string_query, 0, 0, cursor)
+    local root = utils.get_treesitter_root()
+    return utils.cursor_within_treesitter_query(root, ts_math_query, cursor)
+        and not utils.cursor_within_treesitter_query(root, ts_string_query, cursor)
         and M.not_in_markup()
 end
-M.in_markup = function() return utils.cursor_within_treesitter_query(ts_markup_query, 0, 2) end
+M.in_markup = function()
+    local root = utils.get_treesitter_root()
+    return utils.cursor_within_treesitter_query(root, ts_markup_query, nil, 0, 2)
+end
 M.not_in_math = function() return not M.in_math() end
 M.not_in_markup = function() return not M.in_markup() end
 M.wordtrig_patterns = {

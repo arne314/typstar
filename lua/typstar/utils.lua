@@ -73,54 +73,24 @@ function M.generate_bool_set(arr, target)
     end
 end
 
-function M.get_treesitter_root(bufnr) return ts.get_parser(bufnr):parse()[1]:root() end
+function M.get_treesitter_root(bufnr) return ts.get_parser(bufnr or vim.api.nvim_get_current_buf()):parse()[1]:root() end
 
-function M.treesitter_iter_matches(root, query, bufnr, start, stop)
-    local result = {}
-    local idx = 1
-    for _, matches, _ in query:iter_matches(root, bufnr, start, stop) do
-        if #matches then
-            if type(matches[1]) == 'userdata' then -- nvim version < 0.11
-                matches = { matches }
-            end
-            result[idx] = matches
-            idx = idx + 1
-        end
-    end
-    return result
-end
-
-function M.treesitter_match_start_end(match)
-    local start_row, start_col, _, _ = match[1]:range()
-    local _, _, end_row, end_col = match[#match]:range()
-    return start_row, start_col, end_row, end_col
-end
-
-function M.cursor_within_treesitter_query(query, match_tolerance_l, match_tolerance_r, cursor)
+function M.cursor_within_treesitter_query(root, query, cursor, match_tolerance_l, match_tolerance_r)
     cursor = cursor or M.get_cursor_pos()
     match_tolerance_l = match_tolerance_l or 0
     match_tolerance_r = match_tolerance_r or 0
     local bufnr = vim.api.nvim_get_current_buf()
-    local root = M.get_treesitter_root(bufnr)
-    for _, match in ipairs(M.treesitter_iter_matches(root, query, bufnr, cursor[1], cursor[1] + 1)) do
-        for _, nodes in pairs(match) do
-            local start_row, start_col, end_row, end_col = M.treesitter_match_start_end(nodes)
-            local matched = M.cursor_within_coords(
-                cursor,
-                start_row,
-                end_row,
-                start_col,
-                end_col,
-                match_tolerance_l,
-                match_tolerance_r
-            )
-            if matched then return true end
-        end
+
+    for _, node, _, _ in query:iter_captures(root, bufnr, cursor[1], cursor[1] + 1) do
+        local start_row, start_col, end_row, end_col = node:range()
+        local matched =
+            M.cursor_within_coords(cursor, start_row, start_col, end_row, end_col, match_tolerance_l, match_tolerance_r)
+        if matched then return true end
     end
     return false
 end
 
-function M.cursor_within_coords(cursor, start_row, end_row, start_col, end_col, match_tolerance_l, match_tolerance_r)
+function M.cursor_within_coords(cursor, start_row, start_col, end_row, end_col, match_tolerance_l, match_tolerance_r)
     if start_row <= cursor[1] and end_row >= cursor[1] then
         if start_row == cursor[1] and start_col - match_tolerance_l >= cursor[2] then
             return false

@@ -52,21 +52,19 @@ local ts_wrap_query = ts.query.parse('typst', '[(call) (ident) (letter) (number)
 local ts_wrapnobrackets_query = ts.query.parse('typst', '(group) @wrapnobrackets')
 
 local process_ts_query = function(bufnr, cursor, query, root, insert1, insert2, cut_offset)
-    for _, match in ipairs(utils.treesitter_iter_matches(root, query, bufnr, cursor[1], cursor[1] + 1)) do
-        for _, nodes in pairs(match) do
-            local start_row, start_col, end_row, end_col = utils.treesitter_match_start_end(nodes)
-            if end_row == cursor[1] and end_col == cursor[2] then
-                vim.schedule(function() -- to not interfere with luasnip
-                    local cursor_offset = 0
-                    local old_len1, new_len1 = utils.insert_text(bufnr, start_row, start_col, insert1, 0, cut_offset)
-                    if start_row == cursor[1] then cursor_offset = cursor_offset + (new_len1 - old_len1) end
-                    local old_len2, new_len2 =
-                        utils.insert_text(bufnr, end_row, cursor[2] + cursor_offset, insert2, cut_offset, 0)
-                    if end_row == cursor[1] then cursor_offset = cursor_offset + (new_len2 - old_len2) end
-                    vim.api.nvim_win_set_cursor(0, { cursor[1] + 1, cursor[2] + cursor_offset })
-                end)
-                return true
-            end
+    for _, node, _, _ in query:iter_captures(root, bufnr, cursor[1], cursor[1] + 1) do
+        local start_row, start_col, end_row, end_col = node:range()
+        if end_row == cursor[1] and end_col == cursor[2] then
+            vim.schedule(function() -- to not interfere with luasnip
+                local cursor_offset = 0
+                local old_len1, new_len1 = utils.insert_text(bufnr, start_row, start_col, insert1, 0, cut_offset)
+                if start_row == cursor[1] then cursor_offset = cursor_offset + (new_len1 - old_len1) end
+                local old_len2, new_len2 =
+                    utils.insert_text(bufnr, end_row, cursor[2] + cursor_offset, insert2, cut_offset, 0)
+                if end_row == cursor[1] then cursor_offset = cursor_offset + (new_len2 - old_len2) end
+                vim.api.nvim_win_set_cursor(0, { cursor[1] + 1, cursor[2] + cursor_offset })
+            end)
+            return true
         end
     end
     return false

@@ -87,7 +87,7 @@ present in Anki
 
 
 ## Installation
-Install the plugin in Neovim and run the plugin setup.
+Install the plugin in Neovim version `0.11` and above and run the plugin setup.
 You can install and run a demo installation using [Nix](#in-a-nix-flake-optional)).
 ```lua
 require('typstar').setup({ -- depending on your neovim plugin system
