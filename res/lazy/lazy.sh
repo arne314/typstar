@@ -1,6 +1,6 @@
 #!/bin/sh
 REPO=$(git rev-parse --show-toplevel)
-cd $REPO
+cd "$REPO"
 
 export XDG_CONFIG_HOME="$REPO/lazy_temp/config"
 export XDG_DATA_HOME="$REPO/lazy_temp/data"
