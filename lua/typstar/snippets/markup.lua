@@ -10,15 +10,15 @@ local start = helper.start_snip
 local indent_visual = function(idx, default) return helper.visual(idx, default or '', '\t', 1) end
 
 local ctheorems = {
-    { 'tem', 'theorem' },
-    { 'pro', 'proof' },
+    { 'thm', 'theorem' },
+    { 'prf', 'proof' },
     { 'prp', 'proposition' },
-    { 'axi', 'axiom' },
-    { 'cor', 'corollary' },
-    { 'lem', 'lemma' },
-    { 'def', 'definition' },
-    { 'exa', 'example' },
-    { 'rem', 'remark' },
+    { 'axm', 'axiom' },
+    { 'crl', 'corollary' },
+    { 'lmm', 'lemma' },
+    { 'dfn', 'definition' },
+    { 'exm', 'example' },
+    { 'rmr', 'remark' },
 }
 
 local wrappings = {

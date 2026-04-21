@@ -2,7 +2,7 @@ local helper = require('tests.helper'):setup()
 
 helper:add_cases('visual_selection', {
     ['markup'] = function() helper:test_snip('kk', '$a+b+c$') end,
-    ['markup_multiline'] = function() helper:test_snip('tem', '#theorem[\n  a+b+c\n]') end,
+    ['markup_multiline'] = function() helper:test_snip('thm', '#theorem[\n  a+b+c\n]') end,
     ['precedence'] = function() helper:test_snip_math('(a)ht', '(a)hat(a+b+c)') end,
     ['precedence2'] = function() helper:test_snip_math('aht', 'ahat(a+b+c)') end,
     ['nested'] = function()

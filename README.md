@@ -31,7 +31,7 @@ Note that some greek letters have multiple latin ones mapped to them.
 Markup snippets:
 - Begin inline math with `kk` and multiline math with `dm`
 - [Markup shorthands](./lua/typstar/snippets/markup.lua) (e.g. `HIG` &#8594; `#highlight[<cursor>]`, `IMP` &#8594; `$==>$ `)
-- [ctheorems shorthands](./lua/typstar/snippets/markup.lua) (e.g. `tem` &#8594; empty theorem, `exa` &#8594; empty example)
+- [ctheorems shorthands](./lua/typstar/snippets/markup.lua) (e.g. `thm` &#8594; empty theorem, `exm` &#8594; empty example)
 - [Flashcards](#anki): `fla` and `flA`
 - All above snippets support visual mode via the [selection key](#installation)
 
