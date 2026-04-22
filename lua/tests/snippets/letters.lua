@@ -7,6 +7,7 @@ helper:add_cases('letters', {
     ['index_greek'] = function() helper:test_snip(';b1 ', '$beta_1$ ') end,
     ['index_math'] = function() helper:test_snip_math(';a1 ', 'alpha_1 ') end,
     ['index_long'] = function() helper:test_snip(';e123 ', '$epsilon_123$ ') end,
+    ['index_factor'] = function() helper:test_snip_math('3;f1 ', '3phi_1 ') end,
     ['index_prime'] = function() helper:test_snip(";e123'", "$epsilon'_123$ ") end,
     ['index_prime2'] = function() helper:test_snip(";e'123 ", "$epsilon'_123$ ") end,
     ['punctuation'] = function() helper:test_snip('$Xi$ 5.', '$Xi_5$.') end,
