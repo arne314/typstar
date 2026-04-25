@@ -42,16 +42,28 @@ local greek_keys = {}
 local greek_letters_set = {}
 local common_indices = { '\\d+', '[i-n]' }
 -- builtins and calligraphic letters from github.com/lentilus/typst-scribe
-local index_conflicts = { 'Im', 'in', 'ln', 'Pi', 'pi', 'Xi', 'xi', 'Ii', 'Jj', 'Kk', 'Ll', 'Mm', 'Nn' }
-local index_conflicts_set = {}
+local index_blacklist = { 'Im', 'in', 'ln', 'Pi', 'pi', 'Xi', 'xi', 'Ii', 'Jj', 'Kk', 'Ll', 'Mm', 'Nn' }
+local index_blacklist_set = {}
+local index_blacklist_full = {}
 local punctuation_prepend_space = { ',', ';', "'" }
 local punctuation_prepend_space_set = {}
 local trigger_greek = ''
 local trigger_index_pre = ''
 local trigger_index_post = ''
+utils.generate_bool_set(index_blacklist, index_blacklist_set)
+utils.generate_bool_set(punctuation_prepend_space, punctuation_prepend_space_set)
 
 local upper_first = function(str) return str:sub(1, 1):upper() .. str:sub(2, -1) end
 
+-- fill blacklist
+for _, conflict in ipairs(index_blacklist) do
+    table.insert(index_blacklist_full, conflict .. ' ')
+    for punct in pairs(punctuation_prepend_space_set) do
+        table.insert(index_blacklist_full, conflict .. punct)
+    end
+end
+
+-- fill latin greek map
 local greek_full = {}
 for latin, greek in pairs(greek_letters_map) do
     greek_full[latin] = greek
@@ -64,12 +76,9 @@ for latin, greek in pairs(greek_letters_map) do
     table.insert(greek_keys, latin:upper())
 end
 
-utils.generate_bool_set(index_conflicts, index_conflicts_set)
-utils.generate_bool_set(punctuation_prepend_space, punctuation_prepend_space_set)
-
 greek_letters_map = greek_full
 trigger_greek = table.concat(greek_keys, '|')
-trigger_index_pre = '[A-Za-z]' .. '|' .. table.concat(greek_letters_set, '|')
+trigger_index_pre = '[A-Za-z]' .. '|' .. table.concat(greek_letters_set, '|') .. '|Pi|pi'
 trigger_index_post = table.concat(common_indices, '|')
 
 local get_greek = function(_, snippet) return s(nil, t(greek_letters_map[snippet.captures[1]])) end
@@ -77,7 +86,7 @@ local get_greek = function(_, snippet) return s(nil, t(greek_letters_map[snippet
 local get_index = function(_, snippet, _, idx_letter, idx_prime, idx_index, check_conflict)
     local letter, prime, index = snippet.captures[idx_letter], snippet.captures[idx_prime], snippet.captures[idx_index]
     local trigger = letter .. index
-    if check_conflict and index_conflicts_set[trigger] then return s(nil, t(trigger)) end
+    if check_conflict and index_blacklist_set[trigger] then return s(nil, t(trigger)) end
     if snippet.trigger:sub(-1) == "'" then prime = "'" end
     return s(nil, t(letter .. prime .. '_' .. index))
 end
@@ -134,7 +143,7 @@ return {
         { d(1, get_index, {}, { user_args = { 1, 2, 3, true } }), d(2, prepend_space, {}, { user_args = { 4 } }) },
         math,
         200,
-        { maxTrigLength = 11 } -- epsilon'123
+        { maxTrigLength = 11, blacklist = index_blacklist_full } -- epsilon'123
     ),
 
     -- series of numbered letters

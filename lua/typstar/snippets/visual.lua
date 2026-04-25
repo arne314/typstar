@@ -135,6 +135,4 @@ for _, val in pairs(operations) do
     end
 end
 
-return {
-    unpack(snippets),
-}
+return snippets
