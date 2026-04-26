@@ -9,18 +9,6 @@ local start = helper.start_snip
 
 local indent_visual = function(idx, default) return helper.visual(idx, default or '', '\t', 1) end
 
-local ctheorems = {
-    { 'thm', 'theorem' },
-    { 'prf', 'proof' },
-    { 'prp', 'proposition' },
-    { 'axm', 'axiom' },
-    { 'crl', 'corollary' },
-    { 'lmm', 'lemma' },
-    { 'dfn', 'definition' },
-    { 'exm', 'example' },
-    { 'rmr', 'remark' },
-}
-
 local wrappings = {
     { 'kk', '$', '$', '1+1' },
     { 'BLD', '*', '*', 'abc' },
@@ -30,13 +18,7 @@ local wrappings = {
 }
 
 local document_snippets = {}
-local ctheoremsstr = '#%s[\n<>\n<>]'
 local wrappingsstr = '%s<>%s'
-
-for _, val in pairs(ctheorems) do
-    local snippet = start(val[1], string.format(ctheoremsstr, val[2]), { indent_visual(1), cap(1) }, markup)
-    table.insert(document_snippets, snippet)
-end
 
 for _, val in pairs(wrappings) do
     local snippet = snip(val[1], string.format(wrappingsstr, val[2], val[3]), { helper.visual(1, val[4]) }, markup)
