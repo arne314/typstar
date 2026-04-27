@@ -78,6 +78,6 @@ local lmat = function(_, sp)
 end
 
 return {
-    snip('(\\d)(\\d)ma', 'mat(\n\t<>\n)', { d(1, mat) }, math),
-    snip('(\\d)(\\d)lma', 'mat(\n\t<>\n)', { d(1, lmat) }, math),
+    snip('(\\d)(\\d)ma ', 'mat(\n\t<>\n)', { d(1, mat) }, math, 1500),
+    snip('(\\d)(\\d)ma.', 'mat(\n\t<>\n)', { d(1, lmat) }, math, 1500),
 }
