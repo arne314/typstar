@@ -86,7 +86,7 @@ local get_greek = function(_, snippet) return s(nil, t(greek_letters_map[snippet
 local get_index = function(_, snippet, _, idx_letter, idx_prime, idx_index, check_conflict)
     local letter, prime, index = snippet.captures[idx_letter], snippet.captures[idx_prime], snippet.captures[idx_index]
     local trigger = letter .. index
-    if check_conflict and index_blacklist_set[trigger] then return s(nil, t(trigger)) end
+    if check_conflict and prime == '' and index_blacklist_set[trigger] then return s(nil, t(trigger)) end
     if snippet.trigger:sub(-1) == "'" then prime = "'" end
     return s(nil, t(letter .. prime .. '_' .. index))
 end

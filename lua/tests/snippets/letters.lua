@@ -16,7 +16,7 @@ helper:add_cases('letters', {
     ['punctuation4'] = function() helper:test_snip("$Xi$ ',", "$Xi'$, ") end,
     ['conflict'] = function() helper:test_snip_math('Pi Aa ', 'Pi Aa ') end,
     ['conflict2'] = function() helper:test_snip_math(";x'1 ;x'1,;x'1. ;x'1;;x'1!", "xi'_1 xi'_1, xi'_1. xi'_1; xi'_1!") end,
-    ['conflict3'] = function() helper:test_snip_math("Pin pii ;x' ;x, ;x>0 ", "Pi_n pi_i xi' xi, xi>0 ") end,
+    ['conflict3'] = function() helper:test_snip_math("Pin pii ;x' ;x, ;x>0 x'i ", "Pi_n pi_i xi' xi, xi>0 x'_i ") end,
     ['series'] = function() helper:test_snip_math('otk ', '1, 2, ..., k ') end,
     ['series2'] = function() helper:test_snip_math('zt5 ', '0, 1, ..., 5 ') end,
     ['series3'] = function() helper:test_snip_math('alpha otm ', 'alpha_1, alpha_2, ..., alpha_m ') end,
