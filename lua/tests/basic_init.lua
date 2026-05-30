@@ -16,7 +16,7 @@ vim.opt.rtp:prepend(os.getenv('NVIM_PLUGIN_DEV') or '')
 local ls = require('luasnip')
 ls.config.set_config({
     enable_autosnippets = true,
-    store_selection_keys = '<Tab>',
+    cut_selection_keys = '<Tab>',
 })
 
 local typstar = require('typstar')
