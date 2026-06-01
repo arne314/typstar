@@ -1,7 +1,7 @@
 local ls = require('luasnip')
 local i = ls.insert_node
 local d = ls.dynamic_node
-local sn = ls.snippet_node
+local s = ls.snippet_node
 local t = ls.text_node
 local r = ls.restore_node
 
@@ -9,10 +9,16 @@ local helper = require('typstar.autosnippets')
 local snip = helper.snip
 local math = helper.in_math
 
--- generating function
+local parse_nums = function(snippet)
+    local rows = tonumber(snippet.captures[1])
+    local cols = tonumber(snippet.captures[2])
+    if rows == 0 or cols == 0 then return s(nil, i(1, '')), nil, nil end
+    return nil, rows, cols
+end
+
 local mat = function(_, sp)
-    local rows = tonumber(sp.captures[1])
-    local cols = tonumber(sp.captures[2])
+    local replace, rows, cols = parse_nums(sp)
+    if replace ~= nil then return replace end
     local nodes = {}
     local ins_indx = 1
     for j = 1, rows do
@@ -34,21 +40,23 @@ local mat = function(_, sp)
         table.insert(nodes, t({ ';', '\t' }))
     end
     nodes[#nodes] = t(';')
-    return sn(nil, nodes)
+    return s(nil, nodes)
 end
 
-local lmat = function(_, sp)
-    local rows = tonumber(sp.captures[1])
-    local cols = tonumber(sp.captures[2])
+local dotmat = function(_, sp)
+    local replace, rows, cols = parse_nums(sp)
+    if replace ~= nil then return replace end
     local nodes = {}
     local ins_indx = 1
     for j = 1, rows do
-        if j == rows then
-            for k = 1, cols + 1 do
-                if k == cols then
-                    table.insert(nodes, t('dots.down, '))
-                elseif k == cols + 1 then
+        if j == rows and j ~= 1 then
+            local last = cols
+            if cols > 1 then last = cols + 1 end
+            for k = 1, last do
+                if k == last then
                     table.insert(nodes, t('dots.v'))
+                elseif k == cols then
+                    table.insert(nodes, t('dots.down, '))
                 else
                     table.insert(nodes, t('dots.v, '))
                 end
@@ -74,10 +82,10 @@ local lmat = function(_, sp)
         table.insert(nodes, t({ ';', '\t' }))
     end
     nodes[#nodes] = t(';')
-    return sn(nil, nodes)
+    return s(nil, nodes)
 end
 
 return {
     snip('(\\d)(\\d)ma ', 'mat(\n\t<>\n)', { d(1, mat) }, math, 1500),
-    snip('(\\d)(\\d)ma.', 'mat(\n\t<>\n)', { d(1, lmat) }, math, 1500),
+    snip('(\\d)(\\d)ma.', 'mat(\n\t<>\n)', { d(1, dotmat) }, math, 1500),
 }
