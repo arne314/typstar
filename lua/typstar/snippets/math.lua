@@ -83,27 +83,7 @@ return {
         maxTrigLength = 4,
         blacklist = { 'bot ', 'cos ', 'cot ', 'dot ', 'log ', 'mod ', 'not ', 'top ', 'won ', 'xor ' },
     }),
-    -- snip('(C|F|K|N|Q|R|S|Z)([\\dn]) ', '<><>^<> ', { cap(1), cap(1), cap(2) }, math),
-    snip(
-        '(\\S)k(\\d+) ',
-        '<>^(<>) ',
-        { cap(1), cap(2) },
-        math,
-        300,
-        {
-            wordTrig = false,
-        }
-    ),
-    snip(
-        '(\\S)k(\\w) ',
-        '<>^(<>) ',
-        { cap(1), cap(2) },
-        math,
-        301,
-        {
-            wordTrig = false,
-        }
-    ),
+    snip('(C|F|K|N|Q|R|S|Z)([\\dn]) ', '<><>^<> ', { cap(1), cap(1), cap(2) }, math),
 
     -- derivatives
     snip('dx', 'dif / (dif <>) ', { i(1, 'x') }, math),
