@@ -24,7 +24,7 @@ local function get_root_node()
     local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(0))
     -- tresitter is 0 indexed, lua not.
     cursor_row = cursor_row - 1
-    local node = vim.treesitter.get_node({ bufnr = bufnr, pos = { cursor_row, cursor_col } })
+    local node = vim.treesitter.get_node({ bufnr = 0, pos = { cursor_row, cursor_col } })
 
     -- going up recursively
     while node do
@@ -278,7 +278,9 @@ return {
                     elseif start_bound then
                         -- Fallback: No operators found. Align to the first symbol in the segment.
                         local sr, sc, er, ec = start_bound:range()
-                        local br, bc = scan_result.end_boundary:range()
+                        ---@type TSNode
+                        local end_bound = scan_result.end_boundary
+                        local br, bc = end_bound:range()
 
                         -- Determine the row/col where the actual mathematical content starts.
                         -- If bounded by the container itself (math or group), skip the header char (e.g. '$' or '(').
