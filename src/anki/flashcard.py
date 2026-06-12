@@ -47,6 +47,8 @@ class Flashcard:
         return f"Flashcard(id={self.note_id}, front={self.front})"
 
     def as_typst(self, front: bool) -> str:
+        if self.front_node.type == "string":
+            return f'#flashcard({self.note_id}, "{self.front if front else ""}")[{self.back if not front else ""}]'
         return f"#flashcard({self.note_id})[{self.front if front else ''}][{self.back if not front else ''}]"
 
     def as_html(self, front: bool) -> str:
