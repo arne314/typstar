@@ -6,7 +6,7 @@ from typing import List, Tuple
 
 import appdirs
 from tree_sitter import Language, Parser, Query, QueryCursor
-from tree_sitter_language_pack import get_language, get_parser
+from tree_sitter_language_pack import get_language
 
 from .config_parser import RecursiveConfigParser
 from .file_handler import FileHandler
@@ -50,7 +50,7 @@ class FlashcardParser:
 
     def __init__(self):
         self.typst_language = get_language("typst")
-        self.typst_parser = get_parser("typst")
+        self.typst_parser = Parser(self.typst_language)
         self.flashcard_query_cursor = QueryCursor(Query(self.typst_language, ts_flashcard_query))
         self.deck_query_cursor = QueryCursor(Query(self.typst_language, ts_deck_query))
         self.file_handlers = []
