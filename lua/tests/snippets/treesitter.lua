@@ -1,7 +1,7 @@
 local helper = require('tests.helper'):setup()
 
 helper:add_cases('treesitter_markup', {
-    ['start'] = function() helper:test_snip('temabc', '#theorem[\n  abc\n]') end,
+    ['start'] = function() helper:test_snip('thmabc', '#theorem[\n  abc\n]') end,
     ['no_start'] = function() helper:test_snip('1 temabc') end,
     ['no_math'] = function() helper:test_snip('asr') end,
     ['wordtrig'] = function() helper:test_snip(']kk1', ']$1$') end,

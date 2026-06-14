@@ -34,6 +34,7 @@ local default_config = {
             'math',
             'matrix',
             'markup',
+            'theorems',
             'visual',
         },
         exclude = {}, -- list of triggers to exclude
