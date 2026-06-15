@@ -54,6 +54,8 @@ return {
     snip('cb', '^3 ', {}, math, 500, { wordTrig = false }),
     snip('jj', '_(<>) ', { i(1, 'n') }, math, 500, { wordTrig = false }),
     snip('kk', '^(<>) ', { i(1, 'n') }, math, 500, { wordTrig = false }),
+    snip('(\\S)j(\\w) ', '<>_<> ', { cap(1), cap(2) }, math, 100, { wordTrig = false }),
+    snip('(\\S)k(\\w) ', '<>^<> ', { cap(1), cap(2) }, math, 100, { wordTrig = false }),
 
     -- sets
     -- 'st' to '{<>}' in ./visual.lua
@@ -83,7 +85,7 @@ return {
         maxTrigLength = 4,
         blacklist = { 'bot ', 'cos ', 'cot ', 'dot ', 'log ', 'mod ', 'not ', 'top ', 'won ', 'xor ' },
     }),
-    snip('(C|F|K|N|Q|R|S|Z)([\\dn]) ', '<><>^<> ', { cap(1), cap(1), cap(2) }, math),
+    snip('(C|R)([\\dn]) ', '<><>^<> ', { cap(1), cap(1), cap(2) }, math),
 
     -- derivatives
     snip('dx', 'dif / (dif <>) ', { i(1, 'x') }, math),
