@@ -36,8 +36,8 @@ local function auto_export_rnote(path, path_export)
             job_id = utils.run_shell_command(cmd, false, nil, { on_exit = function() job_id = -1 end })
         end
     end
-    local watcher = vim.uv.new_fs_event()
-    watcher:start(path, {}, vim.schedule_wrap(run_export))
+    local watcher = vim.uv.new_fs_poll()
+    watcher:start(path, 1000, vim.schedule_wrap(run_export))
 end
 
 local function launch_rnote(path, path_export)
