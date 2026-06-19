@@ -36,6 +36,7 @@ local default_config = {
             'markup',
             'theorems',
             'visual',
+            'auto-align',
         },
         exclude = {}, -- list of triggers to exclude
         visual_disable = {}, -- visual.lua: list of triggers to exclude from visual selection mode
