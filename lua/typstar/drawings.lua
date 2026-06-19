@@ -10,7 +10,7 @@ local affix = [[
 local config_excalidraw = config.config.excalidraw
 local config_rnote = config.config.rnote
 
-local function launch_excalidraw(path, path_export)
+local function launch_excalidraw(path, _)
     print(string.format('Opening %s in Obsidian Excalidraw', path))
     utils.run_shell_command(
         string.format('%s "obsidian://open?path=%s"', config_excalidraw.uriOpenCommand, utils.urlencode(path)),
@@ -18,26 +18,47 @@ local function launch_excalidraw(path, path_export)
     )
 end
 
-local rnote_watched = {}
+local watched = {}
+local watched_count = 0
 
 local function auto_export_rnote(path, path_export)
-    if rnote_watched[path] then return end
-    rnote_watched[path] = true
+    if watched[path] ~= nil then
+        watched[path].last_use = vim.uv.now() - 1000
+        return
+    end
+
+    -- limit amount of watchers
+    if watched_count >= config_rnote.maxWatchedFiles then
+        local oldest, oldest_key = nil, nil
+        for p, data in pairs(watched) do
+            if oldest == nil or data.last_use < oldest then
+                oldest, oldest_key = data.last_use, p
+            end
+        end
+        if oldest_key ~= nil then
+            watched[oldest_key].watcher:stop()
+            watched[oldest_key] = nil
+        end
+        watched_count = watched_count - 1
+    end
+
+    -- setup watcher
     local job_id = -1
-    local last_export = 0
-
-    local run_export = function(err, filename)
+    watched_count = watched_count + 1
+    watched[path] = {
+        last_use = vim.uv.now() - 1000,
+        watcher = vim.uv.new_fs_poll(),
+    }
+    local run_export = function(err)
+        if err ~= nil then return end
         local time = vim.uv.now()
-        if err ~= nil or time - last_export < 800 then return end
-
-        if job_id == -1 then
-            last_export = time
+        if job_id == -1 and time - watched[path].last_use > 800 then
+            watched[path].last_use = time
             local cmd = string.format(config_rnote.exportCommand, path_export, path, path_export, path)
             job_id = utils.run_shell_command(cmd, false, nil, { on_exit = function() job_id = -1 end })
         end
     end
-    local watcher = vim.uv.new_fs_poll()
-    watcher:start(path, 1000, vim.schedule_wrap(run_export))
+    watched[path].watcher:start(path, 1500, vim.schedule_wrap(run_export))
 end
 
 local function launch_rnote(path, path_export)
