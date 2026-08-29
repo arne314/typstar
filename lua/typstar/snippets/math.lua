@@ -56,6 +56,8 @@ return {
     snip('kk', '^(<>) ', { i(1, 'n') }, math, 500, { wordTrig = false }),
     snip('(\\S)j(\\w) ', '<>_<> ', { cap(1), cap(2) }, math, 100, { wordTrig = false }),
     snip('(\\S)k(\\w) ', '<>^<> ', { cap(1), cap(2) }, math, 100, { wordTrig = false }),
+    snip('\\)j(\\w) ', ')_<> ', { cap(1) }, math, 300, { wordTrig = false }),
+    snip('\\)k(\\w) ', ')^<> ', { cap(1) }, math, 300, { wordTrig = false }),
 
     -- sets
     -- 'st' to '{<>}' in ./visual.lua

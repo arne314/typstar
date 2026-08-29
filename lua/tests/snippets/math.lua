@@ -13,6 +13,8 @@ helper:add_cases('math', {
     ['lim'] = function() helper:test_snip_math('limx\\j0\\jx', 'lim_(x -> 0) x') end,
     ['limsup'] = function() helper:test_snip_math('limx\\j0\\jsupx', 'limsup_(x -> 0) x') end,
     ['superscript'] = function() helper:test_snip_math('aivbsrMcmp', 'a^(-1) b^2 M^complement ') end,
+    ['subscript'] = function() helper:test_snip_math('ajji+1\\j= 0', 'a_(i+1) = 0') end,
+    ['subscript2'] = function() helper:test_snip_math('NNj0 (0,1)ji ji (0,1)ai ', 'NN_0 (0,1)_i j_i (0,1)a_i ') end,
     ['function'] = function() helper:test_snip_math('cos cox cot ', 'cos c(x) cot ') end,
     ['conflict'] = function() helper:test_snip_math('Aivequiv', 'A^(-1) equiv') end,
 })
