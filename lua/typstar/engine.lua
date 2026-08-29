@@ -102,14 +102,20 @@ function M.engine(trigger, opts)
     local max_length = opts.maxTrigLength
     local is_fixed_length = false
     if max_length == nil and alts_regex ~= '' and not trigger:match('[%+%*]') then
+        local n_lb = utils.count_string(trigger, '%(')
+        local n_rb = utils.count_string(trigger, '%)')
+        local n_rlb_diff = math.abs(n_lb - n_rb)
         max_length = #trigger
             - utils.count_string(trigger, '\\')
-            - utils.count_string(trigger, '%(')
-            - utils.count_string(trigger, '%)')
             - utils.count_string(trigger, '%?')
+            - (n_lb + n_rb)
+            + n_rlb_diff
         is_fixed_length = not trigger:match('[%+%*%?%[%]|]')
 
-        local alts_match = alts_regex:match(trigger) -- find longest trigger in [...|...]
+        local alts_match = nil
+        if n_rlb_diff == 0 then
+            alts_match = alts_regex:match(trigger) -- find longest trigger in [...|...]
+        end
         if alts_match then
             for _, alts in ipairs(alts_match) do
                 local max_alt_length = 1
