@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.6.1 - 2026-09-21
+PR #30
+
+### Changed
+- extended subscript and superscript triggers
+
+### Fixed
+- rnote export on file change (see #29)
+- dot matrix triggers
+- removed dropped nix system
+
 ## 1.6.0 - 2026-06-14
 PR #28
 
