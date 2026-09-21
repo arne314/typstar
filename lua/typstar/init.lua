@@ -1,8 +1,8 @@
 local M = {}
 local luasnip
 local config = require('typstar.config')
-local VERSION = '1.6.0'
-local VERSION_INFO = 'Breaking: Changed theorem triggers (thm, lmm, prf, ...)\nSee lua/typstar/snippets/theorems.lua'
+local VERSION = '1.6.1'
+local VERSION_INFO = ''
 
 local notify_plugin_update = function()
     local key = 'typstar_version'
