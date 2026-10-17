@@ -126,15 +126,14 @@ class FlashcardParser:
             f"Parsing flashcards in {scan_dir if single_file is None else single_file} ...",
             flush=True,
         )
-        configs = RecursiveConfigParser(
-            root_dir, {".anki", ".anki.typ"}, recursive=single_file is None
-        )
+        configs = RecursiveConfigParser(root_dir, {".anki", ".anki.typ"})
+        if single_file is None:
+            files = glob(f"{scan_dir}/**/**.typ", recursive=True)
+        else:
+            files = [single_file]
 
-        for file in glob(f"{scan_dir}/**/**.typ", recursive=True):
+        for file in files:
             file = Path(file)
-            if single_file is not None and file != single_file:
-                continue
-
             fh = FileHandler(file)
             file_changed = self._hash_changed(fh)
             if is_force_scan or file_changed:
