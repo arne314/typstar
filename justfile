@@ -47,3 +47,7 @@ lazy *args:
         ./res/lazy/lazy.sh {{args}}; \
     fi
 
+# lint within lazy shell
+lazy-lint:
+    lua-language-server --check . --configpath "$LUARC"
+    stylua --check .
